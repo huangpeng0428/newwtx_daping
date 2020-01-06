@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="header flex flex-align-center flex-justify-between">
+    <div class="header flex vertical f-between">
       <div class="left-text">{{ title }}</div>
-      <div class="header-data flex flex-align-center flex-justify-evenly">
+      <div class="header-data flex vertical f-evenly">
         <div>
           <p>火险等级</p>
           <p class="level">一级</p>
@@ -16,7 +16,7 @@
           <p><span class="number">300</span>次</p>
         </div>
       </div>
-      <div class="right-img flex flex-align-center ">
+      <div class="right-img flex vertical ">
         <img
           class="nomalIcon"
           src="../assets/image/nomalIcon.png"
@@ -25,6 +25,7 @@
           src="../assets/image/nomal-center.png"
           alt="">
         <img
+          style="width:7.69rem;height:3.88rem;"
           src="../assets/image/nomal-right.png"
           alt="">
         <div class="right-text">
@@ -34,14 +35,22 @@
 
       </div>
     </div>
-    <my-map/>
+    <div class="content flex f-between">
+      <div class="left">
+        <left-cont/>
+      </div>
+      <my-map/>
+    </div>
   </div>
 </template>
 <script>
 import MyMap from '../components/map';
+import LeftCont from '../components/leftCont'
+
 export default {
   components: {
-    MyMap
+    MyMap,
+    LeftCont
   },
   data() {
     return {
@@ -58,36 +67,43 @@ export default {
   .header{
     height: 104px;
     .left-text{
+      width: 28.75rem;
       color:rgba(213,253,253,1);
       text-shadow:0px 0px 7px rgba(33,255,255,0.56);
-      font-size: 40px;
+      font-size: 2.5rem;
     }
     .header-data{
-      width: 930px;
+      width: 58.13rem;
       color: #AACDDA;
-      font-size: 16px;
+      font-size: 1rem;
       .level{
         color: #06F0B8;
-        font-size: 36px;
+        font-size: 2.25rem;
       }
       .number{
         color: #D5FDFD;
-        font-size: 36px;
+        font-size: 2.25rem;
       }
     }
     .right-img{
       margin-top: 27px;
       position: relative;
       .nomalIcon{
-        width: 109px;
-        height: 91px;
+        width: 6.81rem;
+        height: 5.69rem;
       }
       .right-text{
         color: #06F0B8;
-        font-size: 19px;
+        font-size: 1.17rem;
         position: absolute;
-        right: 25px;
+        right: 1.50rem;
       }
+    }
+  }
+  .content{
+    width: 100%;
+    .left{
+      width: 28.75rem;
     }
   }
 }

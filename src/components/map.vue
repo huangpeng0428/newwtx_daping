@@ -28,9 +28,8 @@ export default {
 </script>
 <style lang="scss">
 .map-container{
-  width: 930px;
-  height: 583px;
-  margin: 0 auto;
+  width: 58.13rem;
+  height: 36.44rem;
   #map-cont{
     width: 100%;
     height: 100%;
