@@ -1,9 +1,9 @@
 <template>
   <div class="map-container">
     <div id="map-cont" />
-    <img
+    <!-- <img
       class="abl-img"
-      src="../assets/image/mapbg.png">
+      src="../assets/image/mapbg.png"> -->
     <span class="map-title">数据屏监控</span>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
 </script>
 <style lang="scss">
 .map-container{
-  width: 77.13rem;
+  width: 76.13rem;
   height: 39rem;
   position: relative;
   .abl-img{
@@ -52,8 +52,8 @@ export default {
   #map-cont{
     width: 100%;
     height: 37rem;
-    margin: 2.5rem auto 0;
-
+    margin: 3.5rem auto 0;
+    z-index: 999;
   }
 }
 </style>
