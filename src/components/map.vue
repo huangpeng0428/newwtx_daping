@@ -32,12 +32,12 @@ export default {
 </script>
 <style lang="scss">
 .map-container{
-  width: 58.13rem;
-  height: 37rem;
+  width: 77.13rem;
+  height: 39rem;
   position: relative;
   .abl-img{
     position:absolute;
-    width: 58.13rem;
+    width: 77.53rem;
     height: 39.5rem;
     left: 0;
     top: 0;
@@ -46,7 +46,7 @@ export default {
     position: absolute;
     color: #50FCFC;
     font-size: 1.25rem;
-    left: 44.5%;
+    left: 46.5%;
     top: 15px;
   }
   #map-cont{

@@ -36,21 +36,26 @@
       </div>
     </div>
     <div class="content flex f-between">
-      <div class="left">
+      <div class="left between-cont">
         <left-cont/>
       </div>
       <my-map/>
+      <div class="right between-cont">
+        <right-cont/>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import MyMap from '../components/map';
-import LeftCont from '../components/leftCont'
+import LeftCont from '../components/leftCont';
+import RightCont from '../components/rightCont'
 
 export default {
   components: {
     MyMap,
-    LeftCont
+    LeftCont,
+    RightCont
   },
   data() {
     return {
@@ -103,6 +108,9 @@ export default {
   .content{
     width: 100%;
     .left{
+
+    }
+    .between-cont{
       width: 28.75rem;
     }
   }

@@ -61,6 +61,31 @@
           </div>
         </div>
       </div>
+      <div class="tex-left">
+        <span class="fs-87">设备次数统计(前30天)</span>
+        <div/>
+        <div class="fs-87 mrg-tb-15">设备状态统计</div>
+        <div class="flex vertical f-between status-list">
+          <div class="status-item-left">
+            <div class="status-item-bg"/>
+          </div>
+          <div class="status-item-right flex vertical">
+            <div class="cilcle"/>
+            <div class="mrg-lr-10">在线: </div>
+            <div>25588 (86%)</div>
+          </div>
+        </div>
+        <div class="flex vertical f-between status-list">
+          <div class="status-item-left">
+            <div class="status-item-bg"/>
+          </div>
+          <div class="status-item-right flex vertical">
+            <div class="cilcle"/>
+            <div class="mrg-lr-10">在线: </div>
+            <div>25588 (86%)</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -122,6 +147,29 @@ export default {
             font-family:zcoolqingkehuangyouti;
           }
         }
+      }
+      .status-list{
+        .status-item-left{
+          width: 10rem;
+          height: 0.88rem;
+          background: #0F3270;
+          margin-bottom: 1rem;
+          .status-item-bg{
+            background: #8252FD;
+            width: 86%;
+            height: 0.88rem;
+          }
+        }
+        .status-item-right{
+          font-size: 0.87rem;
+          .cilcle{
+            width: 0.88rem;
+            height: 0.88rem;
+            background: #8252FD;
+            border-radius: 50%;
+          }
+        }
+
       }
       img{
         width: 1.25rem;
