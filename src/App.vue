@@ -13,6 +13,8 @@ export default {
 <style lang="scss">
 @import '@/assets/css/base.scss';
 @import '@/assets/css/flex.scss';
+@import '@/assets/css/layout.scss';
+@import '@/assets/css/font.scss';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

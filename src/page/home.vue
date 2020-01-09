@@ -65,7 +65,7 @@ export default {
   width: 100%;
   height: 100%;
   .header{
-    height: 104px;
+    height: 6.56rem;
     .left-text{
       width: 28.75rem;
       color:rgba(213,253,253,1);

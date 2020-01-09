@@ -1,6 +1,10 @@
 <template>
   <div class="map-container">
     <div id="map-cont" />
+    <img
+      class="abl-img"
+      src="../assets/image/mapbg.png">
+    <span class="map-title">数据屏监控</span>
   </div>
 </template>
 <script>
@@ -29,10 +33,27 @@ export default {
 <style lang="scss">
 .map-container{
   width: 58.13rem;
-  height: 36.44rem;
+  height: 37rem;
+  position: relative;
+  .abl-img{
+    position:absolute;
+    width: 58.13rem;
+    height: 39.5rem;
+    left: 0;
+    top: 0;
+  }
+  .map-title{
+    position: absolute;
+    color: #50FCFC;
+    font-size: 1.25rem;
+    left: 44.5%;
+    top: 15px;
+  }
   #map-cont{
     width: 100%;
-    height: 100%;
+    height: 37rem;
+    margin: 2.5rem auto 0;
+
   }
 }
 </style>
