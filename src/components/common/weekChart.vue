@@ -5,6 +5,10 @@
       ref="weekChart"
       class="week-chart"/>
     <div class="weekimg">7日设备数量统计</div>
+    <img
+      class="week-close pointer"
+      src="../../assets/image/close.png"
+      @click="closeEcharts">
   </div>
 </template>
 <script>
@@ -18,6 +22,9 @@ export default {
       })
     },
     methods: {
+        closeEcharts() {
+            this.$emit('closeEcharts')
+        },
         setweekCharts() {
            let weekChart = this.$echarts.init(this.$refs.weekChart)
             console.log(weekChart)
@@ -127,6 +134,13 @@ export default {
     z-index: 999;
     color: #fff;
     top: 0;
+}
+.week-close{
+    position: absolute;
+    width: 1.25rem;
+    line-height: 1.25rem;
+    top: -0.5rem;
+    right: -0.5rem;
 }
 </style>
 

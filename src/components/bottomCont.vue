@@ -4,15 +4,19 @@
       <div
         v-for="(item, index) in echartsData"
         :key="index"
-        class="cont-item">
+        :class="[selected == index? 'action': '']"
+        class="cont-item"
+        @click="clickItem(index)">
         {{ item }}
       </div>
     </div>
     <div class="abs-cont">
-      <div>
-        <week-chart/>
+      <div v-if="showEchart">
+        <week-chart @closeEcharts="closeEcharts"/>
       </div>
-      <!-- <div class="rel region-list">
+      <div
+        v-if="showList"
+        class="rel region-list">
         <div class="regionimg">地区分布</div>
         <div class="region-item-cont">
           <div class="region-item flex vertical f-between">
@@ -29,7 +33,11 @@
             </div>
           </div>
         </div>
-      </div> -->
+        <img
+          class="week-close pointer"
+          src="../assets/image/close.png"
+          @click="closeEcharts('list')">
+      </div>
     </div>
   </div>
 </template>
@@ -42,7 +50,27 @@ export default {
     },
     data() {
         return {
-            echartsData: ['7日数量', '7日状态', '地区分布']
+            echartsData: ['7日数量', '7日状态', '地区分布'],
+            showEchart: false,
+            showList: false,
+            selected: null
+        }
+    },
+    methods: {
+        closeEcharts(str) {
+            if (str == 'list') this.showList = false
+            else this.showEchart = false
+            this.selected = null
+        },
+        clickItem(i) {
+            if (i == 2) {
+                this.showList = true
+                this.showEchart = false
+            } else {
+                this.showList = false
+                this.showEchart = true
+            }
+            this.selected = i
         }
     }
 }
@@ -58,6 +86,10 @@ export default {
       border-radius:2rem;
       margin: 0 0.75rem;
       color: #FFFFFF;
+    }
+    .action{
+        color: rgba(56,89,255,1);
+        background: #fff;
     }
     .abs-cont{
         position: absolute;
@@ -112,6 +144,13 @@ export default {
                         }
                     }
                 }
+            }
+            .week-close{
+                position: absolute;
+                width: 1.25rem;
+                line-height: 1.25rem;
+                top: -0.5rem;
+                right: -0.5rem;
             }
         }
     }
