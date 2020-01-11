@@ -44,7 +44,7 @@
         <span class="c-06f pdd-lr-10 fs-175">258588</span>
       </div>
       <div class="list">
-        <div class="item flex f-between vertical">
+        <div class="item pointer flex f-between vertical">
           <div class="flex">
             <img
               class="pdd-lr-10"
@@ -63,7 +63,12 @@
       </div>
       <div class="tex-left">
         <span class="fs-87">设备次数统计(前30天)</span>
-        <div/>
+        <div class="left-echarts">
+          <div class="statiStical">
+            <line-chart/>
+          </div>
+          <img src="../assets/image/zuobiao.png">
+        </div>
         <div class="fs-87 mrg-tb-15">设备状态统计</div>
         <div class="flex vertical f-between status-list">
           <div class="status-item-left">
@@ -90,8 +95,12 @@
   </div>
 </template>
 <script>
+import lineChart from './common/lineChart'
 export default {
-    name: 'LeftCont'
+    name: 'LeftCont',
+    components: {
+      lineChart
+    }
 }
 </script>
 <style lang="scss">
@@ -137,15 +146,28 @@ export default {
         padding: 1.56rem 0;
       }
       .list{
-        margin: 1rem 0;
+        margin-bottom: 1rem;
+        height: 14rem;
+        overflow-y: scroll;
+        overflow-x: hidden;
         .item{
           width: 100%;
           height: 2.5rem;
           border: 1px solid #1F63A3;
           border-radius: 1.5rem;
+          margin: 1rem 0;
           .item-num{
             font-family:zcoolqingkehuangyouti;
           }
+        }
+      }
+      .left-echarts{
+        .statiStical{
+          width: 26.19rem;
+          height: 9.38rem;
+        }
+        img{
+          width: 100%;
         }
       }
       .status-list{
@@ -154,10 +176,12 @@ export default {
           height: 0.88rem;
           background: #0F3270;
           margin-bottom: 1rem;
+          border-radius: 1rem;
           .status-item-bg{
             background: #8252FD;
             width: 86%;
             height: 0.88rem;
+            border-radius: 1rem;
           }
         }
         .status-item-right{

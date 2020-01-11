@@ -22,7 +22,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   height: 100%;
-  background-color: #07164D;
+  background: url('./assets/image/bg.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   padding: 0 25px;
 }
 </style>

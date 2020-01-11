@@ -19,27 +19,18 @@
       <div class="right-img flex vertical ">
         <img
           class="nomalIcon"
-          src="../assets/image/nomalIcon.png"
+          src="../assets/image/logo.png"
           alt="">
-        <img
-          src="../assets/image/nomal-center.png"
-          alt="">
-        <img
-          style="width:7.69rem;height:3.88rem;"
-          src="../assets/image/nomal-right.png"
-          alt="">
-        <div class="right-text">
-          <p>安全守护</p>
-          <p>严正以待</p>
-        </div>
-
       </div>
     </div>
     <div class="content flex f-between">
       <div class="left between-cont">
         <left-cont/>
       </div>
-      <my-map/>
+      <div>
+        <my-map/>
+        <bottom-cont/>
+      </div>
       <div class="right between-cont">
         <right-cont/>
       </div>
@@ -49,13 +40,15 @@
 <script>
 import MyMap from '../components/map';
 import LeftCont from '../components/leftCont';
-import RightCont from '../components/rightCont'
+import RightCont from '../components/rightCont';
+import bottomCont from '../components/bottomCont';
 
 export default {
   components: {
     MyMap,
     LeftCont,
-    RightCont
+    RightCont,
+    bottomCont
   },
   data() {
     return {
@@ -94,7 +87,7 @@ export default {
       margin-top: 27px;
       position: relative;
       .nomalIcon{
-        width: 6.81rem;
+        width: 24.88rem;
         height: 5.69rem;
       }
       .right-text{

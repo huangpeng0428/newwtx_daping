@@ -33,7 +33,7 @@ export default {
 <style lang="scss">
 .map-container{
   width: 76.13rem;
-  height: 39rem;
+  height: 55rem;
   position: relative;
   .abl-img{
     position:absolute;
@@ -51,9 +51,8 @@ export default {
   }
   #map-cont{
     width: 100%;
-    height: 37rem;
-    margin: 3.5rem auto 0;
-    z-index: 999;
+    height: 54rem;
+    margin: 2.5rem auto 0;
   }
 }
 </style>

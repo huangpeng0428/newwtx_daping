@@ -77,6 +77,30 @@
         </div>
       </div>
     </div>
+    <div class="right-bottom right-img">
+      <div class="flex f-between right-top-title">
+        <div class="flex vertical">
+          <img
+            class="people-img"
+            src="../assets/image/people.png" >
+          <div class="pdd-lr-5">相关负责人信息</div>
+        </div>
+        <div class="flex vertical">
+          <img src="../assets/image/close.png" >
+        </div>
+      </div>
+      <div class="item-right tex-overflow pdd-lr-10">
+        负责人
+      </div>
+      <div class="right-top-cont">
+        <div class="right-top-item flex vertical f-between">
+          <div class="flex vertical">
+            <div>告警时间：</div>
+            <div class="mrg-lr-15">2020.01.03/14:11:00</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -122,7 +146,7 @@ export default {
                }
             }
         }
-        .right-top{
+        .right-img{
             height: 24.63rem;
             width: 28.75rem;
             background: url('../assets/image/rightImg.png');
@@ -157,6 +181,20 @@ export default {
                 height: 1.25rem;
                 width: 1.25rem;
             }
+        }
+        .right-bottom{
+          .people-img{
+            width: 1.5rem;
+            height: 1.13rem;
+          }
+          .item-right{
+            width: 11.69rem;
+            height: 1.88rem;
+            line-height: 1.88rem;
+            border-radius: 2rem;
+            background:linear-gradient(270deg,rgba(56,89,255,1) 0%,rgba(80,252,252,1) 100%);
+            margin: 0 1.3rem;
+          }
         }
     }
 </style>
