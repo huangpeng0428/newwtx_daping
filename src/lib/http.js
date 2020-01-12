@@ -1,7 +1,10 @@
 import Axios from 'axios';
+import config from './config';
+
+import util from './util'
 
 const axios = Axios.create({
-  baseURL: 'http://47.106.172.72:8001/api', // 设置请求域名
+  baseURL: config.HTTPURL, // 设置请求域名
   timeout: 12000,
   headers: {
     'content-type': 'application/json; charset=UTF-8'
@@ -11,6 +14,13 @@ const axios = Axios.create({
 // 请求前拦截
 axios.interceptors.request.use(
   config => {
+
+    // config.data['timestamp'] = new Date().getTime()
+    config.data['timestamp'] = '1578842117394'
+
+    // console.log(`${util.ObjectToString(util.objKeySort(config.data))}&key=3ux94uu9y5SoihjK1BLxZbTOn5dpTAEc`)
+    config.data['sign'] = util.MD5(`${util.ObjectToString(util.objKeySort(config.data))}&key=3ux94uu9y5SoihjK1BLxZbTOn5dpTAEc`)
+    console.log(config.data['sign'])
     return config;
   },
   error => {
