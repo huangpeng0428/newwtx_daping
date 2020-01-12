@@ -1,17 +1,44 @@
 <template>
   <div class="itemData">
     <div class="flex vertical f-between status-list">
-      <div class="status-item-left">
+      <div
+        :style="{'width':itemStyle.width,'height':itemStyle.height}"
+        class="status-item-left">
         <div class="status-item-bg"/>
       </div>
       <div class="status-item-right flex vertical">
-        <div class="cilcle"/>
+        <div
+          :style="{'width':itemStyle.height,'height':itemStyle.height}"
+          class="cilcle"/>
         <div class="mrg-lr-10">在线: </div>
-        <div>25588 (86%)</div>
+        <div>25 (86%)</div>
       </div>
     </div>
   </div>
 </template>
+<script>
+export default {
+    props: {
+        itemStyle: {
+            type: Object,
+            default() {
+                return {
+                    width: '10rem',
+                    height: '0.88rem'
+                }
+            }
+        }
+    },
+    data() {
+        return {
+
+        }
+    },
+    mounted() {
+        console.log(this.itemStyle)
+    }
+}
+</script>
 <style lang="scss">
 .itemData{
     width: 100%;
@@ -25,7 +52,7 @@
           .status-item-bg{
             background: #8252FD;
             width: 86%;
-            height: 0.88rem;
+            height: 100%;
             border-radius: 1rem;
           }
         }

@@ -129,10 +129,10 @@ export default {
 <style lang="scss">
 .linechart-container {
   width: 26.19rem;
-  height: 9.38rem;
+  height: 8.38rem;
   .line-chart{
     width: 26.19rem;
-    height: 9.38rem;
+    height: 8.38rem;
   }
 }
 </style>

@@ -39,45 +39,9 @@
           placeholder="输入您需要搜索的关键词">
       </div>
     </div>
-    <div class="right-top right-img">
-      <div class="flex f-between right-top-title">
-        <div class="flex vertical">
-          <img src="../assets/image/gaojing.png" >
-          <div class="pdd-lr-5">近期告警任务</div>
-        </div>
-        <div class="flex vertical">
-          <img src="../assets/image/goleft.png" >
-          <img
-            class="pdd-lr-10"
-            src="../assets/image/goright.png" >
-          <img src="../assets/image/close.png" >
-        </div>
-      </div>
-      <div class="right-top-cont">
-        <div class="right-top-item flex vertical f-between">
-          <div class="flex vertical">
-            <div>告警时间：</div>
-            <div class="mrg-lr-15">2020.01.03/14:11:00</div>
-          </div>
-          <div class="item-right">
-            负责人
-          </div>
-        </div>
-        <div class="right-top-item flex vertical f-between">
-          <div class="flex vertical">
-            <div>告警设备：</div>
-            <div class="mrg-lr-15 yangan-class">烟感告警</div>
-          </div>
-        </div>
-        <div class="right-top-item flex vertical f-between">
-          <div class="flex vertical">
-            <div>告警设备：</div>
-            <div class="mrg-lr-15 yangan-class">烟感告警</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="right-bottom right-img">
+    <info-data/>
+    <info-data/>
+    <!-- <div class="right-bottom right-img">
       <div class="flex f-between right-top-title">
         <div class="flex vertical">
           <img
@@ -100,12 +64,16 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
+import infoData from './common/infoData'
 export default {
-    name: 'RightCont'
+    name: 'RightCont',
+    components: {
+      infoData
+    }
 }
 </script>
 <style lang="scss">
