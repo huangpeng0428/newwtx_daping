@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import Qs from 'qs'
 import config from './config';
 
 import util from './util'
@@ -7,7 +8,7 @@ const axios = Axios.create({
   baseURL: config.HTTPURL, // 设置请求域名
   timeout: 12000,
   headers: {
-    'content-type': 'application/json; charset=UTF-8'
+    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
   }
 });
 
@@ -21,6 +22,8 @@ axios.interceptors.request.use(
     // console.log(`${util.ObjectToString(util.objKeySort(config.data))}&key=3ux94uu9y5SoihjK1BLxZbTOn5dpTAEc`)
     config.data['sign'] = util.MD5(`${util.ObjectToString(util.objKeySort(config.data))}&key=3ux94uu9y5SoihjK1BLxZbTOn5dpTAEc`)
     console.log(config.data['sign'])
+    config.data = Qs.stringify(config.data);
+    console.log(config.data);
     return config;
   },
   error => {
@@ -31,9 +34,10 @@ axios.interceptors.request.use(
 // 请求返回拦截
 axios.interceptors.response.use(
   result => {
+    console.log(result);
     if (result.status === 200) {
-      if (result.data.code === 0) {
-        return result.data.data;
+      if (result.data.state == 0) {
+        return result.data;
       }
       return Promise.reject(new Error(result.data.message));
     } else if (/^50[0-9]/.test(result.status)) {

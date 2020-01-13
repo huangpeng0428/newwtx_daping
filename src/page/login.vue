@@ -36,9 +36,9 @@ export default {
         // 13588757323  Wtx168168
         return {
             inputList: [
-                {'placeholder': '输入账号', 'key': 'userName', 'maxlength': 11, 'value': '13970343795', 'type': 'text', 'src': require('../assets/image/lgzh.png')},
-                {'placeholder': '输入密码', 'key': 'pwd', 'maxlength': 11, 'value': 'test123456', 'type': 'password', 'src': require('../assets/image/lgmm.png')},
-                {'placeholder': '输入验证码', 'key': 'code', 'maxlength': 4, 'value': 'qlje', 'type': 'text', 'src': require('../assets/image/lgyzm.png')}
+                {'placeholder': '输入账号', 'key': 'userName', 'maxlength': 11, 'value': '13587783003', 'type': 'text', 'src': require('../assets/image/lgzh.png')},
+                {'placeholder': '输入密码', 'key': 'pwd', 'maxlength': 11, 'value': '123456', 'type': 'password', 'src': require('../assets/image/lgmm.png')},
+                {'placeholder': '输入验证码', 'key': 'code', 'maxlength': 4, 'value': '', 'type': 'text', 'src': require('../assets/image/lgyzm.png')}
             ],
             codeSrc: ''
         }
