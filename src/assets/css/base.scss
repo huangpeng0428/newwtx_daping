@@ -9,6 +9,13 @@
     -ms-user-select:none; /*IE10*/  
     user-select:none;  
 }
+
+::-webkit-scrollbar  
+{  
+    width: 1px;  
+    // height: 110px;  
+    background-color: #071755;  
+}
 html {
     font-size: 16px;
 }
