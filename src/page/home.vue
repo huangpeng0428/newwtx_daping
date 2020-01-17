@@ -42,7 +42,6 @@ import MyMap from '../components/map';
 import LeftCont from '../components/leftCont';
 import RightCont from '../components/rightCont';
 import bottomCont from '../components/bottomCont';
-
 export default {
   components: {
     MyMap,
@@ -54,6 +53,13 @@ export default {
     return {
       title: '智慧消防可视化监控中心',
       imgArr: ['']
+    }
+  },
+  mounted() {
+    this.initData()
+  },
+  methods: {
+    async initData() {
     }
   }
 };

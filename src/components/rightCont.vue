@@ -3,33 +3,17 @@
     <div class="select-cont">
       <div class="select-item item-adress flex horizontal">
         <select
-          id="sheng"
-          class="selectop"
-          onchange="bsheng() ">
-          <option>请选择</option>
-        </select>
-        <select
-          id="sheng"
-          class="selectop"
-          onchange="bsheng() ">
-          <option>请选择</option>
-        </select>
-        <select
-          id="sheng"
-          class="selectop"
-          onchange="bsheng() ">
-          <option>请选择</option>
-        </select>
-        <select
-          id="sheng"
-          class="selectop"
-          onchange="bsheng() ">
-          <option>请选择</option>
+          v-for="(value, key) in userAddress"
+          :key="key"
+          class="selectop tex-overflow"
+          onchange="bsheng()">
+          <option v-if="value">{{ value }}</option>
+          <option v-else>请选择</option>
         </select>
       </div>
       <div class="select-item item-facility flex f-between">
         <select
-          id="sheng"
+          id="placeName"
           class="selectop input-selectop"
           onchange="bsheng() ">
           <option>搜索设备</option>
@@ -69,10 +53,46 @@
 </template>
 <script>
 import infoData from './common/infoData'
+import { mapState } from 'vuex'
 export default {
     name: 'RightCont',
     components: {
       infoData
+    },
+    data() {
+      return {
+        userAddress: {
+          province: '',
+          city: '',
+          prefecture: '',
+          areaName: '',
+          placeName: ''
+        }
+      }
+    },
+    computed: {
+      ...mapState('userInfo', ['loginCookie'])
+    },
+    mounted() {
+      this.getAdress()
+    },
+    methods: {
+      async getAdress() {
+        try {
+            let res = await this.$http.post('/user/getUserAddress.do', {userId: this.loginCookie})
+            this.userAddress = {
+              province: res.province,
+              city: res.city,
+              prefecture: res.prefecture,
+              areaName: res.areaName,
+              placeName: res.placeName
+            }
+            if (this.userAddress) {
+
+            }
+          } catch (error) {
+          }
+      }
     }
 }
 </script>
@@ -96,8 +116,8 @@ export default {
                 background: url('../assets/image/select-btn.png');
                 background-repeat: no-repeat;
                 background-size: 0.75rem 0.5rem;
-                background-position: 4.2rem 2.2rem;
-                width: 6rem;
+                background-position: 3.2rem 2.1rem;
+                width: 5rem;
                 padding-right: 2rem;
               }
            }

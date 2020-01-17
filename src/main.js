@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueCookies from 'vue-cookies';
+import store from './store'
 import App from './App'
 import router from './router'
 import echarts from 'echarts'
@@ -43,8 +44,9 @@ router.beforeEach((from, to, next) => {
 
 /* eslint-disable no-new */
 new Vue({
+  store,
   el: '#app',
   router,
   components: { App },
   template: '<App/>'
-})
+});

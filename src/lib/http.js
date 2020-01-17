@@ -35,10 +35,12 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   result => {
     if (result.status === 200) {
-      if (result.data.state == 0) {
-        return Promise.resolve(result.data);
-      }
-      return Promise.reject(result.data);
+
+      // if (result.data.state == 0) {
+      //   return Promise.resolve(result.data);
+      // }
+      // return Promise.reject(result.data);
+      return Promise.resolve(result.data);
     } else if (/^50[0-9]/.test(result.status)) {
       return Promise.reject(new Error('返回500错误'));
     } else if (/^4[0-9][0-9]/.test(result.status)) {

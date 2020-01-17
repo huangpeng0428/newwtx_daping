@@ -30,6 +30,7 @@
 </template>
 <script>
 import config from '../lib/config'
+import { mapActions } from 'vuex'
 export default {
     data() {
 
@@ -44,9 +45,12 @@ export default {
         }
     },
     mounted() {
-        this.codeSrc = `${config.HTTPURL}user/getPatternCode.do?time=${new Date().getTime()}`
+      this.getCodeSrc()
     },
     methods: {
+        getCodeSrc() {
+          this.codeSrc = `${config.HTTPURL}/user/getPatternCode.do?time=${new Date().getTime()}`
+        },
         async loginFunc() {
           let param = this.inputList.reduce((c, item) => {
               c[item.key] = item.value
@@ -67,13 +71,15 @@ export default {
             return false;
           }
           try {
-            let res = await this.$http.post('user/login.do', param)
+            let res = await this.$http.post('/user/login.do', param)
             if (res.state == 0 && res.userID) {
-              this.$cookies.set('loginId_cookie', res.userID, '7d', '/');  // 7天后过期
+              this.$cookies.set('loginCookie', res.userID, '7d', '/');  // 7天后过期
+              this.setloginCookie(res.userID)
               this.$router.push({path: '/'})
             }
           } catch (error) {
             alert(error.message)
+            this.getCodeSrc()
             this.inputList[2].value = ''
           }
 
@@ -87,7 +93,8 @@ export default {
           //     this.inputList[2].value = ''
           //   }
           // })
-        }
+        },
+        ...mapActions('userInfo', {'setloginCookie': 'actionsloginCookie'})
     }
 }
 </script>

@@ -5,8 +5,17 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
-  name: 'App'
+  name: 'App',
+  created() {
+    if (this.$cookies.get('loginCookie')) {
+      this.setloginCookie(this.$cookies.get('loginCookie'))
+    }
+  },
+  methods: {
+    ...mapActions('userInfo', {'setloginCookie': 'actionsloginCookie'})
+  }
 }
 </script>
 
