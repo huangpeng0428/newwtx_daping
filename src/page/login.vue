@@ -47,15 +47,46 @@ export default {
         this.codeSrc = `${config.HTTPURL}user/getPatternCode.do?time=${new Date().getTime()}`
     },
     methods: {
-        loginFunc() {
-            let param = this.inputList.reduce((c, item) => {
-                c[item.key] = item.value
-                return c
-            }, {})
-             console.log(param)
-            this.$http.post('user/login.do', param).then(res => {
-                console.log(res)
-            })
+        async loginFunc() {
+          let param = this.inputList.reduce((c, item) => {
+              c[item.key] = item.value
+              return c
+          }, {})
+          if (!param.userName) {
+            alert('请输入用户名!');
+            return false;
+          }
+
+          if (!param.pwd) {
+            alert('请输入密码!');
+            return false;
+          }
+
+          if (!param.code) {
+            alert('验证码不能为空!');
+            return false;
+          }
+          try {
+            let res = await this.$http.post('user/login.do', param)
+            if (res.state == 0 && res.userID) {
+              this.$cookies.set('loginId_cookie', res.userID, '7d', '/');  // 7天后过期
+              this.$router.push({path: '/'})
+            }
+          } catch (error) {
+            alert(error.message)
+            this.inputList[2].value = ''
+          }
+
+          // this.$http.post('user/login.do', param).then((res, err) => {
+          //   if (res.state == 0 && res.userID) {
+          //     this.$cookies.set('loginId_cookie', res.userID, '7d', '/');  // 7天后过期
+          //     this.$router.push({path: '/'})
+          //   } else {
+          //     console.log(err)
+          //     alert(err.message);
+          //     this.inputList[2].value = ''
+          //   }
+          // })
         }
     }
 }

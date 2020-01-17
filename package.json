@@ -17,6 +17,7 @@
     "echarts": "^4.6.0",
     "qs": "^6.9.1",
     "vue": "^2.5.2",
+    "vue-cookies": "^1.6.1",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

@@ -1,4 +1,6 @@
 import Axios from 'axios';
+
+// import Vue from 'vue';
 import Qs from 'qs'
 import config from './config';
 
@@ -16,14 +18,12 @@ const axios = Axios.create({
 axios.interceptors.request.use(
   config => {
 
-    // config.data['timestamp'] = new Date().getTime()
-    config.data['timestamp'] = '1578842117394'
+    config.data['timestamp'] = new Date().getTime()
 
     // console.log(`${util.ObjectToString(util.objKeySort(config.data))}&key=3ux94uu9y5SoihjK1BLxZbTOn5dpTAEc`)
+    // console.log(Vue.prototype.$cookies.get('loginId_cookie'));
     config.data['sign'] = util.MD5(`${util.ObjectToString(util.objKeySort(config.data))}&key=3ux94uu9y5SoihjK1BLxZbTOn5dpTAEc`)
-    console.log(config.data['sign'])
     config.data = Qs.stringify(config.data);
-    console.log(config.data);
     return config;
   },
   error => {
@@ -34,12 +34,11 @@ axios.interceptors.request.use(
 // 请求返回拦截
 axios.interceptors.response.use(
   result => {
-    console.log(result);
     if (result.status === 200) {
       if (result.data.state == 0) {
-        return result.data;
+        return Promise.resolve(result.data);
       }
-      return Promise.reject(new Error(result.data.message));
+      return Promise.reject(result.data);
     } else if (/^50[0-9]/.test(result.status)) {
       return Promise.reject(new Error('返回500错误'));
     } else if (/^4[0-9][0-9]/.test(result.status)) {
