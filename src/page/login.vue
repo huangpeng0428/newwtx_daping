@@ -76,6 +76,10 @@ export default {
               this.$cookies.set('loginCookie', res.userID, '7d', '/');  // 7天后过期
               this.setloginCookie(res.userID)
               this.$router.push({path: '/'})
+            } else {
+              alert(res.message)
+              this.getCodeSrc()
+              this.inputList[2].value = ''
             }
           } catch (error) {
             alert(error.message)

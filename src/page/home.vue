@@ -60,6 +60,12 @@ export default {
   },
   methods: {
     async initData() {
+
+      // console.log(this.$cookies.get('loginCookie'))
+      // if (!this.$cookies.get('loginCookie') || this.$cookies.get('loginCookie') == null) {
+      //   this.$router.push({path: '/login'})
+      //   return
+      // }
     }
   }
 };
