@@ -10,24 +10,31 @@
 <script>
 import Bus from '../bus.js'
 import AMap from 'AMap'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   name: 'MyMap',
   data() {
     return {
-      map: null,
+      map: {},
       styleObject: [],
-      mass: null,
-      data_info: [{'lnglat': [118.85, 31.95], 'name': '盛安大道001', 'fid': '2001032121122529', 'co': 0, 'electricity': 0, 'fire': 1, 'smoke': 0, 'video': 0, 'water': 0}],
+      mass: {},
+      data_info: [],
       marker: null
     };
   },
   computed: {
-      ...mapGetters('mapInfo', {'adressInfo': 'returnadressInfo'})
+    ...mapState('userInfo', ['loginCookie']),
+    ...mapGetters('mapInfo', {'adressInfo': 'returnadressInfo'})
   },
   watch: {
     adressInfo: {
       handler(val) {
+
+        // console.log(val)
+        // if (this.map) this.map.remove(this.mass)
+
+        // this.mass = null
+        this.data_info = []
         this.getmark(val)
       }
     }
@@ -35,7 +42,8 @@ export default {
   mounted() {
     this.initMap();
     Bus.$on('initialmap', ({DM, listpoint, leval}) => {
-      console.log(DM, listpoint, leval)
+
+      // console.log(DM, listpoint, leval)
 
       this.initsiteMap(DM, listpoint, leval)
     })
@@ -54,18 +62,22 @@ export default {
         anchor: new AMap.Pixel(25, 25), // 图标显示位置偏移量，基准点为图标左上角
         size: new AMap.Size(50, 50)    // 图标大小
       }];
-      console.log(this.data_info)
+
+      // this.mass = new AMap.MassMarks(this.data_info, {
+      //   zIndex: 111,
+      //   cursor: 'pointer',
+      //   style: this.styleObject
+      // })
+
+      // this.addMarkers()
+    },
+    addMarkers() {
       this.mass = new AMap.MassMarks(this.data_info, {
-        zIndex: 111,
+        zIndex: 999,
         cursor: 'pointer',
         style: this.styleObject
       })
-
-      this.addMarkers()
-    },
-    addMarkers() {
       this.marker = new AMap.Marker({content: ' ', map: this.map});
-      console.log(this.marker)
 
       // this.mass.on('mouseover', openInfo);
       // this.mass.on('mouseout', closeInfo);
@@ -73,8 +85,12 @@ export default {
       this.mass.setMap(this.map);
     },
     initsiteMap(DM, listpoint, leval) {
-      let x = Number(listpoint[0]) || NaN;
-      let y = Number(listpoint[1]) || NaN;
+      let x, y
+      if (listpoint.length) {
+        x = Number(listpoint[0])
+        y = Number(listpoint[1])
+      }
+
       if (DM != '') {
         this.map.setZoom(leval)
         this.map.setCity(DM);
@@ -83,13 +99,51 @@ export default {
         this.map.setCenter(new AMap.LngLat(x, y));// 初始化地图,设置中心点坐标和地图级别
       }
     },
-    getmark({province, city, prefecture, areaName, placeName}) {
+    async getmark({province, city, prefecture, areaName, placeName, placeId}) {
+      if (this.map) this.map.remove(this.mass)
 
-      // let params = {
-      //   userID: this.loginCookie,
-      //   prefecture: this.userAddress.prefecture
-      // }
-      // console.log()
+      // this.mass = null
+
+      let params = {
+        userId: this.loginCookie,
+        province: province
+      }
+
+      if (city != '') {
+        params['city'] = city;
+      }
+      if (prefecture != '') {
+        params['prefecture'] = prefecture;
+      }
+      if (areaName != '') {
+        params['areaName'] = areaName;
+      }
+      if (placeName != '') {
+        params['placeId'] = placeId;
+      }
+
+      try {
+        let res = await this.$http.post('/location/getPosition.do', params)
+        let placeList = res.list
+        for (let i = 0; i < placeList.length; i++) {
+          let list = {
+            lnglat: [Number(placeList[i].fPositionX), Number(placeList[i].fPositionY)],
+            name: placeList[i].fAreaName,
+            fid: placeList[i].fID,
+            co: placeList[i].co,
+            electricity: placeList[i].electricity,
+            fire: placeList[i].fire,
+            smoke: placeList[i].smoke,
+            video: placeList[i].video,
+            water: placeList[i].water
+          };
+          this.data_info.push(list);
+        }
+
+        // console.log(this.data_info)
+        this.addMarkers()
+      } catch (error) {
+      }
     }
   }
 };

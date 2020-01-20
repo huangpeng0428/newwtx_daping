@@ -1,17 +1,22 @@
 <template>
   <div class="itemData">
-    <div class="flex vertical f-between status-list">
+    <div
+      v-for="(itemState,index) in stateData"
+      :key="index"
+      class="flex vertical f-between status-list">
       <div
         :style="{'width':itemStyle.width,'height':itemStyle.height}"
         class="status-item-left">
-        <div class="status-item-bg"/>
+        <div
+          :style="{'width':itemState.accountNum,'background':itemState.color}"
+          class="status-item-bg"/>
       </div>
       <div class="status-item-right flex vertical">
         <div
-          :style="{'width':itemStyle.height,'height':itemStyle.height}"
+          :style="{'width':itemStyle.height,'height':itemStyle.height,'background':itemState.color}"
           class="cilcle"/>
-        <div class="mrg-lr-10">在线: </div>
-        <div>25 (86%)</div>
+        <div class="mrg-lr-10">{{ itemState.title }}: </div>
+        <div>{{ itemState.count }} ({{ itemState.accountNum }})</div>
       </div>
     </div>
   </div>
@@ -27,6 +32,12 @@ export default {
                     height: '0.88rem'
                 }
             }
+        },
+        stateData: {
+          type: Array,
+            default() {
+              return []
+            }
         }
     },
     data() {
@@ -35,6 +46,7 @@ export default {
         }
     },
     mounted() {
+      console.log(this.stateData)
     }
 }
 </script>
@@ -57,6 +69,7 @@ export default {
         }
         .status-item-right{
           font-size: 0.87rem;
+          width:12rem;
           .cilcle{
             width: 0.88rem;
             height: 0.88rem;

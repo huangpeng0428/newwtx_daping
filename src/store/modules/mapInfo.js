@@ -16,7 +16,6 @@ const state = {
   const mutations = {
       setadressInfo(state, adressInfo) {
           state.adressInfo = adressInfo;
-          console.log(state)
 
           // state.loginCookie = Vue.prototype.cookies.get("loginCookie");
       }

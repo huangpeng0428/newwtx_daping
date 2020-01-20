@@ -9,11 +9,11 @@
         </div>
         <div>
           <p>设备通讯统计</p>
-          <p><span class="number">15556241</span>次</p>
+          <p><span class="number">{{ communicationNum }}</span>次</p>
         </div>
         <div>
-          <p>历史告警</p>
-          <p><span class="number">300</span>次</p>
+          <p>历史告警(前30天)</p>
+          <p><span class="number">{{ allAountMonth }}</span>次</p>
         </div>
       </div>
       <div class="right-img flex vertical ">
@@ -25,7 +25,7 @@
     </div>
     <div class="content flex f-between">
       <div class="left between-cont">
-        <left-cont/>
+        <left-cont @historyallAountMonth="historyallAountMonth"/>
       </div>
       <div>
         <my-map/>
@@ -42,6 +42,8 @@ import MyMap from '../components/map';
 import LeftCont from '../components/leftCont';
 import RightCont from '../components/rightCont';
 import bottomCont from '../components/bottomCont';
+import { mapState, mapGetters } from 'vuex'
+import util from '../lib/util'
 export default {
   components: {
     MyMap,
@@ -52,13 +54,41 @@ export default {
   data() {
     return {
       title: '智慧消防可视化监控中心',
+      params: null,
+      communicationNum: 0,
+      allAountMonth: 0,
       imgArr: ['']
     }
   },
+  computed: {
+    ...mapState('userInfo', ['loginCookie']),
+    ...mapGetters('mapInfo', {'adressInfo': 'returnadressInfo'})
+  },
+  watch: {
+      adressInfo: {
+        handler(val) {
+          console.log('val', val)
+          val['userId'] = this.loginCookie
+          this.params = util.getparams(val)
+          this.getFacilityCommunication()
+        }
+      }
+    },
   mounted() {
     this.initData()
   },
   methods: {
+    async getFacilityCommunication() {
+      try {
+        let res = await this.$http.post('/facilityInfo/countFacilityCommunication.do', this.params)
+        this.communicationNum = res[res.length - 1].countFid
+      } catch (error) {
+      }
+    },
+    historyallAountMonth(val) {
+      console.log('历史告警', val)
+      this.allAountMonth = val
+    },
     async initData() {
 
       // console.log(this.$cookies.get('loginCookie'))

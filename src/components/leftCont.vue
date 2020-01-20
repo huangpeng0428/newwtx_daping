@@ -45,26 +45,28 @@
       <div class="tex-left flex vertical f-between">
         <div class="flex vertical">
           <span class="fs-87">设备数量总和</span>
-          <span class="c-06f pdd-lr-10 fs-175">258588</span>
+          <span class="c-06f pdd-lr-10 fs-175">{{ allAount }}</span>
         </div>
-        <div class="left-adress tex-overflow ">浙江省</div>
+        <div class="left-adress tex-overflow ">{{ params.province }}</div>
       </div>
       <div v-if="!isShowList">
         <div class="list">
           <div
+            v-for="(item,index) in facilityList"
+            :key="index"
             class="item pointer flex f-between vertical "
             @mouseenter="mouseEvent(true)"
             @mouseleave="mouseEvent(false)"
-            @click="showInfo('isShowList', true)">
+            @click="showInfo('isShowList', true, item)">
             <div class="flex">
               <img
-                class="pdd-lr-10"
-                src="../assets/image/yangan.png" >
-              <span>智能烟感</span>
+                :src="item.icon"
+                class="pdd-lr-10" >
+              <span>{{ item.title }}</span>
             </div>
             <div class="flex vertical">
-              <span class="pdd-lr-10 fs-188 item-num">8635</span>
-              <span>个</span>
+              <span class="pdd-lr-10 fs-188 item-num">{{ item.count }}</span>
+              <span>{{ item.unit }}</span>
               <img
                 class="pdd-lr-10"
                 style="width:0.56rem;height:0.88rem;"
@@ -95,12 +97,21 @@
       <div
         v-if="isShowList"
         class="adress-list">
-        <div class="flex f-between vertical pointer item">
+        <div
+          v-for="(item,index) in listByType"
+          :key="index"
+          class="flex f-between vertical pointer item">
           <div class="flex vertical">
-            <div class="cilcle mrg-lr-5"/>
-            <span>在线</span>
-            <span>告警</span>
-            <span>测试时候</span>
+            <div
+              :style="{background:item.isOnline?'#D3FBFB':'blue'}"
+              class="cilcle mrg-lr-5"/>
+            <span
+              class="pdd-r-5"
+              v-text="item.isOnline?'在线':'离线'"/>
+            <span
+              v-if="item.isOnline"
+              class="pdd-r-5 warn">告警</span>
+            <div class="tex-overflow adress-text">{{ item.placeAddress }}{{ item.facilitySecondPosition }}</div>
           </div>
           <img
             class="pointer pdd-lr-10"
@@ -112,13 +123,17 @@
         <span class="fs-87">设备次数统计(前30天)</span>
         <div class="left-echarts">
           <div class="statiStical">
-            <line-chart/>
+            <line-chart
+              v-if="chartData.length"
+              :chart-data="chartData"/>
           </div>
           <img src="../assets/image/zuobiao.png">
         </div>
       </div>
       <div class="tex-left fs-87 mrg-tb-15">设备状态统计</div>
-      <item-data/>
+      <item-data
+        v-if="stateData.length"
+        :state-data="stateData"/>
       <div
         v-if="isShowInfo"
         class="abl-info">
@@ -131,6 +146,8 @@
 import lineChart from './common/lineChart'
 import itemData from './common/itemData'
 import infoData from './common/infoData'
+import { mapState, mapGetters } from 'vuex'
+import util from '../lib/util'
 export default {
     name: 'LeftCont',
     components: {
@@ -143,21 +160,118 @@ export default {
         showMask: false,
         isShowInfo: false,
         isShowList: false,
+        chartData: [],
+        allAount: 0,
+        listByType: [],
+        // eslint-disable-next-line no-dupe-keys
+        params: {province: '浙江省'},
+        stateData: [
+          {title: '在线', type: 'online', count: '', accountNum: '', color: '#8252FD'},
+          {title: '离线', type: 'offline', count: '', accountNum: '', color: '#E5901D'},
+          {title: '低电压', type: 'low', count: '', accountNum: '', color: '#408EFE'},
+          {title: '故障', type: 'fault', count: '', accountNum: '', color: '#05DBB0'},
+          {title: '告警', type: 'warn', count: '', accountNum: '', color: '#BE4596'}
+        ],
+        facilityList: [
+          {title: '智能烟感', count: '', unit: '个', icon: require('../assets/image/yangan.png'), ftype: 0},
+          {title: '智慧用电', count: '', unit: '个', icon: require('../assets/image/diangan.png'), ftype: 3},
+          {title: '视频监控', count: '', unit: '个', icon: require('../assets/image/shipin.png'), ftype: 4},
+          {title: '物联网关', count: '', unit: '个', icon: require('../assets/image/wangguan.png'), ftype: 8},
+          {title: '智能消防栓', count: '', unit: '个', icon: require('../assets/image/xiaofang.png'), ftype: 7},
+          {title: '智能气感', count: '', unit: '个', icon: require('../assets/image/qigan.png'), ftype: 1},
+          {title: '液压液位检测', count: '', unit: '个', icon: require('../assets/image/yewei.png'), ftype: 2}
+        ],
         itemStyle: {
           width: '8rem',
           height: '0.5rem'
         }
       }
     },
+    computed: {
+      ...mapState('userInfo', ['loginCookie']),
+      ...mapGetters('mapInfo', {'adressInfo': 'returnadressInfo'})
+    },
+    watch: {
+      adressInfo: {
+        handler(val) {
+          console.log('val', val)
+          val['userId'] = this.loginCookie
+          this.params = util.getparams(val)
+
+          // 左上角设备数量
+          this.getcountFacility()
+
+          // 30天报警数量
+          this.getcountMonth()
+
+          // 设备运行状态
+          this.getFacilityState()
+        }
+      }
+    },
     methods: {
-      mouseEvent(showMask) {
-        this.showMask = showMask
+      async getcountFacility() {
+        this.allAount = 0
+        try {
+          let res = await this.$http.post('/facilityInfo/countFacility.do', this.params)
+          this.facilityList.forEach((e, i) => {
+            res.forEach(item => {
+              if (e.ftype == item.ftype) e.count = item.countFid
+            })
+            this.allAount += e.count
+          });
+        } catch (error) {
+        }
       },
-      showInfo(res, flat) {
+      async getcountMonth() {
+        this.chartData = []
+        try {
+          let {countSmoke, countMingyu, countCO, countWater, countFirehydrant} = await this.$http.post('/facilityInfo/count30Days.do', this.params)
+          let allAountMonth = countSmoke + countMingyu + countCO + countWater + countFirehydrant
+          this.$emit('historyallAountMonth', allAountMonth)
+          this.chartData.push(countSmoke, countMingyu, countCO, countWater, countFirehydrant)
+        } catch (error) {
+        }
+      },
+      async getFacilityState() {
+        try {
+          let res = await this.$http.post('/facilityInfo/countFacilityState.do', this.params)
+          let allAount = res.online + res.offline + res.low + res.fault + res.warn
+          Object.keys(res).reduce((c, e, i) => {
+            c.forEach(element => {
+              if (element.type == e) {
+                element.count = res[e]
+                element.accountNum = `${Math.floor((res[e] / allAount) * 100)}%`
+              }
+            });
+            return c
+          }, this.stateData)
+        } catch (error) {
+        }
+      },
+      mouseEvent(showMask) {
+
+        // this.showMask = showMask
+      },
+      async showInfo(res, flat, data) {
+        if (flat) {
+          let params = JSON.parse(JSON.stringify(this.params))
+          let sum = 0
+          if (data.ftype == 0) params['sum'] = sum
+          params['type'] = data.ftype
+          try {
+            let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
+            console.log(res)
+            this.listByType = res
+          } catch (error) {
+          }
+        }
         this[res] = flat
-        this.showMask = false
+
+        // this.showMask = false
       },
       hiddenInfo() {
+
         this.isShowInfo = false
       }
     }
@@ -258,7 +372,7 @@ export default {
       }
       .adress-list{
         margin: 1rem 0;
-        height: 15rem;
+        height: 13rem;
         overflow-y: scroll;
         overflow-x: hidden;
         .cilcle{
@@ -269,6 +383,13 @@ export default {
         }
         .item{
           padding: 0.5rem 0;
+          .warn{
+            color:red;
+          }
+          .adress-text{
+            width:15rem;
+            text-align:left;
+          }
         }
         .item:hover {
           background-color: #0D73C7;

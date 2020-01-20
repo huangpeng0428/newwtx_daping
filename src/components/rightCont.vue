@@ -5,6 +5,7 @@
         <select
           v-model="userAddress.province"
           class="selectop tex-overflow"
+          @change="selectChange('province')"
         >
           <option value="">请选择</option>
           <template>
@@ -31,6 +32,7 @@
         <select
           v-model="userAddress.prefecture"
           class="selectop tex-overflow"
+          @change="selectChange('prefecture')"
         >
           <option value="">请选择</option>
           <template>
@@ -169,7 +171,6 @@ export default {
             newval.prefecture = ''
             this.areaList = []
             this.placeList = []
-            newval.prefecture = ''
             this.getAllPrefecture()
           }
           if (newval.prefecture != '' && newval.prefecture != oldval.prefecture) {
@@ -187,8 +188,16 @@ export default {
             // this.userAddress.placeName = ''
             this.getAllPlace()
           }
+
+          // if (newval.placeName != '' && newval.placeName != oldval.placeName) {
+          //   console.log(11)
+
+          //   // this.userAddress.placeName = ''
+          //   this.getAllPlace()
+          // }
           newval['placeId'] = this.areaId
-          console.log('newval', newval)
+
+          // console.log('newval', newval)
           this.setadressInfo(newval)
         },
         deep: true
@@ -212,12 +221,7 @@ export default {
               placeName: res.placeName
             }
             this.eventObj.DM = res.province
-            let eventObj = {
-              DM: this.eventObj.DM,
-              listpoint: this.eventObj.listpoint,
-              leval: this.eventObj.leval
-            }
-            Bus.$emit('initialmap', eventObj)
+            Bus.$emit('initialmap', this.eventObj)
 
             if (this.userAddress) {
 
@@ -302,9 +306,47 @@ export default {
         }
       },
       selectChange(item) {
-        if (item == 'areaName') {
-          let {fID} = this.areaList.find(e => e.fAreaName == this.userAddress[item])
-          this.areaId = fID
+        this.eventObj = {
+          DM: '',
+          listpoint: [],
+          leval: 6
+        }
+        switch (item) {
+          case 'province':
+            this.eventObj.DM = this.userAddress[item]
+            Bus.$emit('initialmap', this.eventObj)
+            break
+          case 'city':
+            this.eventObj.DM = this.userAddress[item]
+            Bus.$emit('initialmap', this.eventObj)
+            break
+          case 'prefecture':
+            let {fAreaX, fAreaY} = this.prefectureList.find(e => e.fPrefecture == this.userAddress[item])
+            this.eventObj.DM = ''
+            this.eventObj.leval = 11
+            if (fAreaX != null && fAreaY != null) {
+              this.eventObj.listpoint.push(fAreaX, fAreaY)
+              Bus.$emit('initialmap', this.eventObj)
+            }
+            break
+          case 'areaName':
+            let obj = this.areaList.find(e => e.fAreaName == this.userAddress[item])
+            this.areaId = obj.fID
+            this.eventObj.DM = ''
+            this.eventObj.leval = 11
+            if (obj.fAreaX != null && obj.fAreaY != null) {
+              this.eventObj.listpoint.push(obj.fAreaX, obj.fAreaY)
+              Bus.$emit('initialmap', this.eventObj)
+            }
+            break
+          case 'placeName':
+            let {fID, fPositionX, fPositionY} = this.placeList.find(e => e.fAreaName == this.userAddress[item])
+            this.areaId = fID
+            this.eventObj.DM = ''
+            this.eventObj.listpoint.push(fPositionX, fPositionY)
+            this.eventObj.leval = 16
+            Bus.$emit('initialmap', this.eventObj)
+            break
         }
       },
       ...mapActions('mapInfo', {'setadressInfo': 'actionsadressInfo'})

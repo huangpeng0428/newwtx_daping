@@ -25,6 +25,27 @@ export default {
         return str;
     },
 
+    // 取出有值的参数
+    getparams({userId, province, city, prefecture, areaName, placeName, placeId}) {
+        let params = {
+            userId: userId,
+            province: province
+        }
+        if (city != '') {
+            params['city'] = city;
+          }
+          if (prefecture != '') {
+            params['prefecture'] = prefecture;
+          }
+          if (areaName != '') {
+            params['areaName'] = areaName;
+          }
+          if (placeName != '') {
+            params['placeId'] = placeId;
+          }
+        return params
+    },
+
     // md5加密
     MD5(string) {
 

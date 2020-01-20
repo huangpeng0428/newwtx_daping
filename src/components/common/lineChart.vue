@@ -10,6 +10,12 @@
 export default {
     name: 'Linechart',
     props: {
+      chartData: {
+        type: Array,
+        default() {
+          return []
+        }
+      }
     },
     data() {
         return {
@@ -18,6 +24,7 @@ export default {
     },
     mounted() {
       this.$nextTick(() => {
+        console.log(this.chartData)
         setTimeout(() => {
           this.setcharts()
         }, 100)
@@ -83,7 +90,7 @@ export default {
           series: [{
             name: '数量',
             type: 'bar',
-            data: ['1060', '1703', '100', '190', '100'],
+            data: this.chartData,
 
             // barMaxWidth: '',
             barWidth: 14,
