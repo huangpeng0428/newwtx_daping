@@ -84,8 +84,8 @@
           placeholder="输入您需要搜索的关键词">
       </div>
     </div>
-    <info-data/>
-    <info-data/>
+    <info-data :data-config="infoTop"/>
+    <info-data :data-config="infoBottom"/>
     <!-- <div class="right-bottom right-img">
       <div class="flex f-between right-top-title">
         <div class="flex vertical">
@@ -116,6 +116,7 @@
 import infoData from './common/infoData'
 import { mapState, mapActions } from 'vuex'
 import Bus from '../bus.js'
+import util from '../lib/util'
 export default {
     name: 'RightCont',
     components: {
@@ -140,16 +141,61 @@ export default {
           prefecture: '',
           areaName: '',
           placeName: ''
-        }
+        },
+        infoTopObj: {},
+        infoTopIndex: 0,
+        infoTop: {title: '近期告警任务', haveInfo: true, showNext: true, infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '设备位置：', key: 'placeAddress', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '任务状态：', key: 'fConfirmState', val: '无', showColor: true, showHead: false, showtitle: true}]},
+        infoBottom: {title: '相关负责人信息', haveInfo: false, showNext: false, infoArr: [{title: '', key: 'fAreaName', val: '无', showColor: true, showHead: false, showtitle: false}, {title: '法人：', key: 'fVillagePrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '法人电话：', key: 'fVillagePhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人：', key: 'fAreaPrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人电话：', key: 'fAreaPhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '地址：', key: 'fAreaAddress', val: '无', showColor: false, showHead: false, showtitle: true}]}
       }
     },
     computed: {
       ...mapState('userInfo', ['loginCookie']),
+      ...mapState('mapInfo', ['rightInfoBottom']),
+
+      // ...mapState('mapInfo', ['adressInfo']),
       newNserAddress() {
         return JSON.parse(JSON.stringify(this.userAddress))
       }
     },
     watch: {
+      'infoTopObj': {
+        handler(val) {
+          Object.keys(val).forEach(e => {
+            this.infoTop.infoArr.forEach(element => {
+              if (element.key == e) {
+                if (element.key == 'placeAddress') {
+                  element.val = `${val[e]}${val['facilitySecondPosition']}`
+                } else if (element.key == 'facilityType') {
+                  if (val[e] == 0) {
+                    element.val = '烟感告警'
+                  }
+                } else if (element.key == 'fConfirmState') {
+                  if (val[e] == 4) {
+                    element.val = '未恢复'
+                  }
+                } else {
+                  element.val = val[e]
+                }
+              }
+            });
+          });
+          console.log(this.infoTop)
+
+          // this.infoBottom = Object.assign({}, this.bootomConfig, val)
+        }
+      },
+      'rightInfoBottom': {
+        handler(val) {
+          this.infoBottom.haveInfo = true
+          this.infoBottom.infoArr.forEach(element => {
+            Object.keys(val).forEach(e => {
+              if (element.key == e) element.val = val[e]
+            });
+          });
+
+          // this.infoBottom = Object.assign({}, this.bootomConfig, val)
+        }
+      },
       'newNserAddress': {
         handler(newval, oldval) {
           if (newval.province != '' && newval.province != oldval.province) {
@@ -199,6 +245,10 @@ export default {
 
           // console.log('newval', newval)
           this.setadressInfo(newval)
+          newval['userId'] = this.loginCookie
+          this.params = util.getparams(newval)
+
+          this.getWarningTask()
         },
         deep: true
       }
@@ -228,6 +278,17 @@ export default {
             }
           } catch (error) {
           }
+      },
+      async getWarningTask() {
+        let params = JSON.parse(JSON.stringify(this.params))
+        params['page'] = 1
+        try {
+          let res = await this.$http.post('/facilityInfo/countFacilityWarningTaskTo30DaysGZ.do', params)
+          this.infoTopObj = res[this.infoTopIndex]
+          console.log(this.infoTopObj)
+        } catch (error) {
+          alert(error.message)
+        }
       },
       async getAllProvince() {
         try {

@@ -4,43 +4,52 @@
       <div class="flex f-between right-top-title">
         <div class="flex vertical">
           <img src="../../assets/image/gaojing.png" >
-          <div class="pdd-lr-5">近期告警任务</div>
+          <div class="pdd-lr-5">{{ dataConfig.title }}</div>
         </div>
         <div class="flex vertical">
-          <img src="../../assets/image/goleft.png" >
           <img
+            v-if="dataConfig.showNext"
+            src="../../assets/image/goleft.png" >
+          <img
+            v-if="dataConfig.showNext"
             class="pdd-lr-10"
             src="../../assets/image/goright.png" >
-          <img
+            <!-- <img
             class="pointer"
             src="../../assets/image/close.png"
-            @click="hiddenInfo" >
+            @click="hiddenInfo" > -->
         </div>
       </div>
       <div class="right-top-cont">
-        <div class="adress-right tex-overflow pdd-lr-10">
-          宁泰家园
+        <div v-if="dataConfig.haveInfo">
+          <div
+            v-for="(item,index) in dataConfig.infoArr"
+            :key="index"
+            class="right-top-item flex vertical f-between">
+            <!-- <div class="adress-right tex-overflow pdd-lr-10">
+            {{ dataConfig.fAreaName }}
+          </div> -->
+            <div class="flex vertical">
+              <div v-if="item.showtitle">{{ item.title }}</div>
+              <div
+                v-if="item.showColor"
+                class="adress-right tex-overflow pdd-lr-10">
+                {{ item.val }}
+              </div>
+              <div
+                v-if="!item.showColor"
+                class="mrg-lr-15">{{ item.val }}
+              </div>
+            </div>
+            <div
+              v-if="item.showHead"
+              class="item-right">
+              负责人
+            </div>
+          </div>
         </div>
-        <div class="right-top-item flex vertical f-between">
-          <div class="flex vertical">
-            <div>告警时间：</div>
-            <div class="mrg-lr-15">2020.01.03/14:11:00</div>
-          </div>
-          <div class="item-right">
-            负责人
-          </div>
-        </div>
-        <div class="right-top-item flex vertical f-between">
-          <div class="flex vertical">
-            <div>告警设备：</div>
-            <div class="mrg-lr-15 yangan-class border-style">烟感告警</div>
-          </div>
-        </div>
-        <div class="right-top-item flex vertical f-between">
-          <div class="flex vertical">
-            <div>告警设备：</div>
-            <div class="mrg-lr-15 yangan-class border-style">烟感告警</div>
-          </div>
+        <div v-else>
+          暂无
         </div>
       </div>
     </div>
@@ -49,10 +58,25 @@
 <script>
 export default {
     name: 'InfoData',
-    methods: {
-        hiddenInfo() {
-            this.$emit('hiddenInfo')
+    props: {
+      dataConfig: {
+        type: Object,
+        default() {
+          return {title: '近期告警任务', haveInfo: false, showNext: true}
         }
+      }
+    },
+    data() {
+      return {
+
+      }
+    },
+    computed: {
+    },
+    methods: {
+      hiddenInfo() {
+        this.$emit('hiddenInfo')
+      }
     }
 }
 </script>

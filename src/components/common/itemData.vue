@@ -35,9 +35,9 @@ export default {
         },
         stateData: {
           type: Array,
-            default() {
-              return []
-            }
+          default() {
+            return []
+          }
         }
     },
     data() {

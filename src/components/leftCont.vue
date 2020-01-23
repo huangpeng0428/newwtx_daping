@@ -116,7 +116,7 @@
           <img
             class="pointer pdd-lr-10"
             src="../assets/image/lbIcon.png"
-            @click="showInfo('isShowInfo', true)">
+            @click="showInfo('isShowInfo', true, '')">
         </div>
       </div>
       <div class="tex-left">
@@ -147,6 +147,7 @@ import lineChart from './common/lineChart'
 import itemData from './common/itemData'
 import infoData from './common/infoData'
 import { mapState, mapGetters } from 'vuex'
+import Bus from '../bus.js'
 import util from '../lib/util'
 export default {
     name: 'LeftCont',
@@ -194,7 +195,6 @@ export default {
     watch: {
       adressInfo: {
         handler(val) {
-          console.log('val', val)
           val['userId'] = this.loginCookie
           this.params = util.getparams(val)
 
@@ -208,6 +208,13 @@ export default {
           this.getFacilityState()
         }
       }
+    },
+    mounted() {
+      Bus.$on('leftPost', (placeId) => {
+        this.params['placeId'] = placeId
+        this.getcountFacility()
+        this.getFacilityState()
+      })
     },
     methods: {
       async getcountFacility() {
@@ -255,15 +262,17 @@ export default {
       },
       async showInfo(res, flat, data) {
         if (flat) {
-          let params = JSON.parse(JSON.stringify(this.params))
-          let sum = 0
-          if (data.ftype == 0) params['sum'] = sum
-          params['type'] = data.ftype
-          try {
-            let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
-            console.log(res)
-            this.listByType = res
-          } catch (error) {
+          if (data) {
+            let params = JSON.parse(JSON.stringify(this.params))
+            let sum = 0
+            if (data.ftype == 0) params['sum'] = sum
+            params['type'] = data.ftype
+            try {
+              let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
+              console.log(res)
+              this.listByType = res
+            } catch (error) {
+            }
           }
         }
         this[res] = flat
@@ -310,7 +319,7 @@ export default {
     }
     .left-cont-bottom{
       color: #D5FDFD;
-      height: 46.25rem;
+      height: 48.25rem;
       margin-top: 0.69rem;
       padding: 0 1.25rem;
       background: url('../assets/image/Rectangle.png');
@@ -330,7 +339,7 @@ export default {
         padding: 0 1rem;
       }
       .list{
-        margin-bottom: 1rem;
+        margin: 1rem 0;
         height: 14rem;
         overflow-y: scroll;
         overflow-x: hidden;

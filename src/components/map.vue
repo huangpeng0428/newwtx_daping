@@ -10,7 +10,7 @@
 <script>
 import Bus from '../bus.js'
 import AMap from 'AMap'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
   name: 'MyMap',
   data() {
@@ -19,6 +19,7 @@ export default {
       styleObject: [],
       mass: {},
       data_info: [],
+      rightInfoBottom: {},
       marker: null
     };
   },
@@ -51,6 +52,7 @@ export default {
     // this.initMark()
   },
   methods: {
+    ...mapActions('mapInfo', {'setrightInfoBottom': 'actionsrightInfoBottom'}),
     initMap() {
       this.map = new AMap.Map('map-cont', {
         resizeEnable: true, // 是否监控地图容器尺寸变化
@@ -79,10 +81,49 @@ export default {
       })
       this.marker = new AMap.Marker({content: ' ', map: this.map});
 
-      // this.mass.on('mouseover', openInfo);
-      // this.mass.on('mouseout', closeInfo);
-      // this.mass.on('click', getList);
+      this.mass.on('mouseover', this.openInfo);
+
+      this.mass.on('mouseout', this.closeInfo);
+
+      this.mass.on('click', this.getList);
       this.mass.setMap(this.map);
+    },
+
+    getList(e) {
+      Bus.$emit('leftPost', e.data.fid)
+      this.setrightInfoBottom(this.righInfoBottom)
+    },
+    closeInfo() {
+      this.map.clearInfoWindow();
+    },
+    async openInfo(e) {
+      let params = {}
+      params['placeId'] = e.data.fid
+      try {
+          let res = await this.$http.post('/location/getPlace.do', params)
+          this.righInfoBottom = res.list[0]
+          let {fAreaName, fVillagePrincipal, fAreaPrincipal, fAreaPhone, fAreaAddress} = res.list[0]
+          this.openMask(fAreaName, fVillagePrincipal, fAreaPrincipal, fAreaPhone, fAreaAddress, e.data.lnglat)
+        } catch (error) {
+        }
+    },
+    openMask(fAreaName, fVillagePrincipal, fAreaPrincipal, fAreaPhone, fAreaAddress, lnglat) {
+      if (fAreaName == null) fAreaName = '无'
+      if (fVillagePrincipal == null) fVillagePrincipal = '无'
+      if (fAreaPrincipal == null) fAreaPrincipal = '无'
+      if (fAreaPhone == null) fAreaPhone = '无'
+      if (fAreaAddress == null) fAreaAddress = '无'
+      let infoWindow = new AMap.InfoWindow({
+        offset: new AMap.Pixel(0, -30),
+        isCustom: true,
+        autoMove: true,
+        content: "<div style='text-align: left;width:20rem;height:9rem;background:rgba(33,82,162,0.7);border-radius:1rem;border:solid 1px #cb1bbc;padding:0.12rem 0.1rem;'><p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>场所名称：" + fAreaName + '</p>' +
+           "<p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>法人：" + fVillagePrincipal + '</p>' +
+           "<p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>紧急联系人：" + fAreaPrincipal + '</p>' +
+           "<p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>电话：" + fAreaPhone + '</p>' +
+           "<p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>地址：" + fAreaAddress + '</p></div>'
+      });
+      infoWindow.open(this.map, lnglat);
     },
     initsiteMap(DM, listpoint, leval) {
       let x, y
