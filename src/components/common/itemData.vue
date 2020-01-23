@@ -46,7 +46,8 @@ export default {
         }
     },
     mounted() {
-      console.log(this.stateData)
+
+      // console.log(this.stateData)
     }
 }
 </script>

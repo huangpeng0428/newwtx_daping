@@ -12,24 +12,39 @@
     </div>
     <div class="abs-cont">
       <div v-if="showEchart">
-        <week-chart @closeEcharts="closeEcharts"/>
+        <week-chart
+          :date-arr="dateArr"
+          :online-arr="onlineArr"
+          :offline-arr="offlineArr"
+          :low-arr="lowArr"
+          :fault-arr="faultArr"
+          :warn-arr="warnArr"
+          :title-arr="titleArr"
+          @closeEcharts="closeEcharts"/>
       </div>
       <div
         v-if="showList"
         class="rel region-list">
         <div class="regionimg">地区分布</div>
         <div class="region-item-cont">
-          <div class="region-item flex vertical f-between">
+          <div
+            v-for="(item, index) in adressList"
+            :key="index"
+            class="region-item flex vertical">
             <div class="flex vertical">
-              <div class="color-block"/>
-              <div class="region-name">丽水市</div>
+              <div
+                :style="{backgroundColor:item.bg_color}"
+                class="color-block"/>
+              <div class="region-name tex-overflow">{{ item.fCity }}</div>
             </div>
             <div class="region-right flex vertical">
               <div class="region-block">
-                <div class="region-color"/>
+                <div
+                  :style="{backgroundColor:item.bg_color,width:item.percent}"
+                  class="region-color"/>
               </div>
-              <div class="region-number">1</div>
-              <div class="region-scale">1%</div>
+              <div class="region-number tex-overflow">{{ item.countFid }}</div>
+              <div class="region-scale">{{ item.percent }}</div>
             </div>
           </div>
         </div>
@@ -43,6 +58,8 @@
 </template>
 <script>
 import weekChart from './common/weekChart'
+import { mapState, mapGetters } from 'vuex'
+import util from '../lib/util'
 export default {
     name: 'BottomCont',
     components: {
@@ -53,8 +70,31 @@ export default {
             echartsData: ['7日数量', '7日状态', '地区分布'],
             showEchart: false,
             showList: false,
-            selected: null
+            selected: null,
+            params: {},
+            dateArr: [],
+            onlineArr: [],
+            offlineArr: [],
+            lowArr: [],
+            faultArr: [],
+            warnArr: [],
+            titleArr: [],
+            adressList: []
         }
+    },
+    computed: {
+      ...mapState('userInfo', ['loginCookie']),
+      ...mapGetters('mapInfo', {'adressInfo': 'returnadressInfo'})
+    },
+    watch: {
+      adressInfo: {
+        handler(val) {
+          val['userId'] = this.loginCookie
+          this.params = util.getparams(val)
+        }
+      }
+    },
+    mounted() {
     },
     methods: {
         closeEcharts(str) {
@@ -63,14 +103,76 @@ export default {
             this.selected = null
         },
         clickItem(i) {
-            if (i == 2) {
-                this.showList = true
-                this.showEchart = false
+          if (i == 2) {
+              this.showList = true
+              this.showEchart = false
+              this.getAdressData()
+          } else {
+              this.showList = false
+              this.showEchart = true
+              let posturl = i == '0' ? '/facilityInfo/countFacilityTo7DaysByType.do' : '/facilityInfo/countFacilityTo7DaysByStateGZ.do'
+              this.getChartData(posturl, i)
+          }
+          this.selected = i
+        },
+        async getAdressData() {
+          try {
+            let res = await this.$http.post('/facilityInfo/countAreaFacility.do', this.params)
+            this.adressList = res['facility']
+            let countAll = 0
+            let color = ['#28a80a', '#3f51c0', '#ac9126', '#c11e1e']
+            this.adressList.forEach(element => {
+              countAll += element.countFid
+            });
+            this.adressList.forEach(item => {
+              let num = util.random(0, 4);
+              item['percent'] = `${Math.floor((item.countFid / countAll) * 100)}%`
+              item['bg_color'] = color[num] || '#3f51c0'
+            });
+            console.log(this.adressList)
+          } catch (error) {
+            alert(error.message)
+          }
+        },
+        async getChartData(posturl, i) {
+
+          // this.dateArr = []
+          this.onlineArr = []
+          this.offlineArr = []
+          this.lowArr = []
+          this.faultArr = []
+          this.warnArr = []
+          try {
+            let res = await this.$http.post(posturl, this.params)
+            this.titleArr = i == '0' ? ['烟', '电', '气', '视频', '水'] : ['在线', '离线', '低电压', '故障', '告警']
+            if (i == '0') {
+
+              // this.dateArr = []
+              this.onlineArr = [1, 0, 0, 0, 0, 0, 0]
+              this.offlineArr = [0, 0, 2, 0, 0, 0, 0]
+              this.lowArr = [0, 2, 0, 0, 0, 0, 0]
+              this.faultArr = [0, 0, 0, 0, 0, 0, 0]
+              this.warnArr = [0, 0, 0, 0, 0, 0, 0]
             } else {
-                this.showList = false
-                this.showEchart = true
+              this.dateArr = [res[0].date.substr(5)]
+              this.onlineArr = [res[0].online]
+              this.offlineArr = [res[0].offline]
+              this.lowArr = [res[0].low]
+              this.faultArr = [res[0].fault]
+              this.warnArr = [res[0].warn]
+              res[1].forEach(element => {
+                this.dateArr.push(element.date.substr(5))
+                this.onlineArr.push(element.online)
+                this.offlineArr.push(element.offline)
+                this.lowArr.push(element.low)
+                this.faultArr.push(element.fault)
+                this.warnArr.push(element.warn)
+              });
             }
-            this.selected = i
+            console.log(this.offlineArr)
+          } catch (error) {
+            alert(error.message)
+          }
         }
     }
 }
@@ -98,7 +200,7 @@ export default {
         z-index: 100;
         .region-list{
             height: 25rem;
-            width: 21rem;
+            width: 23rem;
             background: url('../assets/image/left-bg-top.png');
             background-repeat: no-repeat;
             background-size: 100% 100%;
@@ -116,17 +218,20 @@ export default {
             }
             .region-item-cont{
                 height: 20rem;
-                width: 19rem;
+                width: 21rem;
                 margin: 0 1rem;
                 overflow-y: scroll;
                 .region-item{
                     margin-bottom: 1rem;
                     color: #fff;
+                    .region-name{
+                      width: 4rem
+                    }
                     .color-block{
                         height: 1.25rem;
                         width: 1.25rem;
                         background: #06F0B8;
-                        margin-right: 1rem;
+                        // margin-right: 1rem;
                     }
                     .region-right{
                         // flex: 1;
@@ -135,12 +240,15 @@ export default {
                             height: 0.88rem;
                             border-radius: .5rem;
                             background:#0F3270;
+                            margin: 0 1rem;
                             .region-color{
                                 border-radius: .5rem;
                                 height: 100%;
-                                width: 50%;
                                 background: #06F0B8;
                             }
+                        }
+                        .region-number{
+                          width: 3rem;
                         }
                     }
                 }

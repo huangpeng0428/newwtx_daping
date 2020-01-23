@@ -45,6 +45,9 @@ export default {
           }
         return params
     },
+    random(a, b) {
+		return parseInt(Math.floor(Math.random() * (b - a + 1)) + a);
+	},
 
     // md5加密
     MD5(string) {

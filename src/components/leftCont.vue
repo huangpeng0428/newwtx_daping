@@ -269,7 +269,6 @@ export default {
             params['type'] = data.ftype
             try {
               let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
-              console.log(res)
               this.listByType = res
             } catch (error) {
             }

@@ -14,11 +14,74 @@
 <script>
 export default {
     name: 'WeekChart',
+    props: {
+       dateArr: {
+           type: Array,
+           default() {
+               return []
+           }
+       },
+       onlineArr: {
+           type: Array,
+           default() {
+               return []
+           }
+       },
+       offlineArr: {
+           type: Array,
+           default() {
+               return []
+           }
+       },
+       lowArr: {
+           type: Array,
+           default() {
+               return []
+           }
+       },
+       faultArr: {
+           type: Array,
+           default() {
+               return []
+           }
+       },
+       warnArr: {
+           type: Array,
+           default() {
+               return []
+           }
+       },
+       titleArr: {
+           type: Array,
+           default() {
+               return ['烟', '电', '气', '视频', '水']
+           }
+       }
+    },
+    data() {
+        return {
+            weekChart: ''
+        }
+    },
+    watch: {
+        titleArr: {
+            handler(val) {
+
+                if (this.weekChart) this.weekChart.resize()
+
+                setTimeout(() => {
+                    this.setweekCharts()
+                }, 100)
+
+                // this.setweekCharts()
+            }
+        }
+    },
     mounted() {
       this.$nextTick(() => {
         setTimeout(() => {
           this.setweekCharts()
-        }, 100)
+        }, 200)
       })
     },
     methods: {
@@ -26,9 +89,9 @@ export default {
             this.$emit('closeEcharts')
         },
         setweekCharts() {
-           let weekChart = this.$echarts.init(this.$refs.weekChart)
-            console.log(weekChart)
-           weekChart.setOption({
+           this.weekChart = this.$echarts.init(this.$refs.weekChart)
+
+           this.weekChart.setOption({
             color: ['#1da35f', '#3276c9', '#96a231', '#36b7bf', '#0341c9'],
             textStyle: {
                 color: '#fff'
@@ -41,7 +104,7 @@ export default {
             },
 
             legend: {
-                data: ['烟', '电', '气', '视频', '水'],
+                data: this.titleArr,
                 textStyle: {
                     color: '#fff'
                 }
@@ -54,7 +117,7 @@ export default {
             },
             xAxis: {
                 type: 'category',
-                data: ['01-10', '01-09', '01-08', '01-07', '01-06', '01-05', '01-04']
+                data: this.dateArr
             },
             yAxis: {
 
@@ -63,41 +126,41 @@ export default {
             },
             series: [
                 {
-                    name: '烟',
+                    name: this.titleArr[0],
                     type: 'bar',
-                    data: [0, 487, 0, 0, 0, 0, 0],
+                    data: this.onlineArr,
                     itemStyle: {
                         barBorderRadius: [10, 10, 0, 0]
                     }
                 },
                 {
-                    name: '电',
+                    name: this.titleArr[1],
                     type: 'bar',
-                    data: [0, 587, 0, 0, 0, 0, 0],
+                    data: this.offlineArr,
                     itemStyle: {
                         barBorderRadius: [10, 10, 0, 0]
                     }
                 },
                 {
-                    name: '气',
+                    name: this.titleArr[2],
                     type: 'bar',
-                    data: [0, 487, 0, 0, 0, 0, 0],
+                    data: this.lowArr,
                     itemStyle: {
                         barBorderRadius: [10, 10, 0, 0]
                     }
                 },
                 {
-                    name: '视频',
+                    name: this.titleArr[3],
                     type: 'bar',
-                    data: [0, 487, 0, 0, 300, 0, 0],
+                    data: this.faultArr,
                     itemStyle: {
                         barBorderRadius: [10, 10, 0, 0]
                     }
                 },
                 {
-                    name: '水',
+                    name: this.titleArr[4],
                     type: 'bar',
-                    data: [0, 487, 0, 0, 0, 200, 0],
+                    data: this.warnArr,
                     itemStyle: {
                         barBorderRadius: [10, 10, 0, 0]
                     }

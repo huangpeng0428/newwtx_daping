@@ -100,11 +100,11 @@ export default {
       let params = {}
       params['placeId'] = e.data.fid
       try {
-          let res = await this.$http.post('/location/getPlace.do', params)
-          this.righInfoBottom = res.list[0]
-          let {fAreaName, fVillagePrincipal, fAreaPrincipal, fAreaPhone, fAreaAddress} = res.list[0]
-          this.openMask(fAreaName, fVillagePrincipal, fAreaPrincipal, fAreaPhone, fAreaAddress, e.data.lnglat)
-        } catch (error) {
+        let res = await this.$http.post('/location/getPlace.do', params)
+        this.righInfoBottom = res.list[0]
+        let {fAreaName, fVillagePrincipal, fAreaPrincipal, fAreaPhone, fAreaAddress} = res.list[0]
+        this.openMask(fAreaName, fVillagePrincipal, fAreaPrincipal, fAreaPhone, fAreaAddress, e.data.lnglat)
+      } catch (error) {
         }
     },
     openMask(fAreaName, fVillagePrincipal, fAreaPrincipal, fAreaPhone, fAreaAddress, lnglat) {
