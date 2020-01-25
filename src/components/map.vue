@@ -1,9 +1,9 @@
 <template>
   <div class="map-container">
     <div id="map-cont" />
-    <!-- <img
+    <img
       class="abl-img"
-      src="../assets/image/mapbg.png"> -->
+      src="../assets/image/map_bg.png">
     <span class="map-title">数据屏监控</span>
   </div>
 </template>
@@ -196,22 +196,23 @@ export default {
   position: relative;
   .abl-img{
     position:absolute;
-    width: 77.53rem;
-    height: 39.5rem;
+    width: 76.2rem;
     left: 0;
-    top: 0;
+    top: -2.8rem;
   }
   .map-title{
     position: absolute;
     color: #50FCFC;
     font-size: 1.25rem;
-    left: 46.5%;
-    top: 15px;
+    left: 46%;
+    top: -10px;
   }
   #map-cont{
+    border: 2px solid #2A5B9C;
+    border-top: none;
     width: 100%;
     height: 54rem;
-    margin: 2.5rem auto 0;
+    // margin: 2.5rem auto 0;
   }
 }
 </style>

@@ -23,21 +23,25 @@
       <div class="right-top-cont">
         <div class="right-top-item">
           <div class="adress-right-warn tex-overflow pdd-lr-10">
-            南翔可出租屋
+            {{ dataConfig.warnAdress }}
           </div>
         </div>
 
-        <div class="right-top-item">
+        <div
+          v-for="(item, index) in dataConfig.infoArr"
+          :key="index"
+          class="right-top-item">
           <div class="flex vertical">
-            <div>告警时间：</div>
-            <div class="tex-overflow pdd-lr-10">
-              2020.01.03/
-              14:11:00
+            <div>{{ item.title }}</div>
+            <div
+              :class="index == '1' ? 'warn-facility' : ''"
+              class="tex-overflow pdd-lr-10">
+              {{ item.val }}
             </div>
           </div>
         </div>
 
-        <div class="right-top-item">
+        <!-- <div class="right-top-item">
           <div class="flex vertical">
             <div>告警设备：</div>
             <div class="warn-facility tex-overflow pdd-lr-10">
@@ -54,14 +58,15 @@
               烟感告警烟感告警烟感告警烟感告警烟感告警烟感告警烟感告警烟感告警
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="flex vertical">
         <div class="warn-btn pointer">确认为预警</div>
         <div class="warn-btn right pointer">确认为火警</div>
       </div>
-      <div class="item-right-warn">
-        负责人
+      <div class="item-right-warn flex f-between">
+        <div class>负责人</div>
+        <div class="home-manage">{{ dataConfig.homeManager }}</div>
       </div>
     </div>
   </div>
@@ -83,6 +88,9 @@ export default {
       }
     },
     computed: {
+    },
+    mounted() {
+        console.log(this.dataConfig)
     },
     methods: {
       hiddenInfo() {
@@ -167,6 +175,11 @@ export default {
             background:linear-gradient(90deg,#3858FF 0%,#9B4FFA 100%);
             line-height: 1.88rem;
             margin:0 2.5rem;
+            padding:0 2.5rem;
+            .home-manage{
+                color: #fff;
+                font-size:1.55rem;
+            }
         }
         .adress-right{
             width: 11.69rem;

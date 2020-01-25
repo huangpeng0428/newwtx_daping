@@ -2,8 +2,26 @@
   <div class="container">
     <div class="header flex vertical f-between">
       <div class="left-text">{{ title }}</div>
-      <div class="header-data flex vertical f-evenly">
-        <div>
+      <!-- warn -->
+      <div
+        v-if="isWebsocket"
+        class="header-data warnCont flex vertical f-evenly">
+        <img
+          class="warnImg"
+          src="../assets/image/warn.png" >
+        <div class="warnText">
+          2019年10月21日 11:41:50
+          <span class="warnColor">王林村新村5栋2单元</span>
+          南翔可出租房502室
+          <span class="warnColor">智能烟感</span>
+          发生
+          <span class="warnColor">警告！</span>
+        </div>
+      </div>
+      <div
+        v-else
+        class="header-data flex vertical f-evenly">
+        <div @click="playAudio">
           <p>火险等级</p>
           <p class="level">一级</p>
         </div>
@@ -16,45 +34,42 @@
           <p><span class="number">{{ allAountMonth }}</span>次</p>
         </div>
       </div>
-      <!-- warn -->
-      <!-- <div class="header-data warnCont flex vertical f-evenly">
-        <img
-          class="warnImg"
-          src="../assets/image/warn.png" >
-        <div class="warnText">
-          2019年10月21日 11:41:50
-          <span class="warnColor">王林村新村5栋2单元</span>
-          南翔可出租房502室
-          <span class="warnColor">智能烟感</span>
-          发生
-          <span class="warnColor">警告！</span>
-        </div>
-      </div> -->
       <div class="right-img flex vertical ">
         <img
+          v-if="isWebsocket"
+          class="nomalIcon"
+          src="../assets/image/warnlogo.png"
+          alt="">
+        <img
+          v-else
           class="nomalIcon"
           src="../assets/image/logo.png"
           alt="">
-          <!-- warn -->
-          <!-- <img
-          class="nomalIcon"
-          src="../assets/image/warnlogo.png"
-          alt=""> -->
       </div>
     </div>
     <div class="content flex f-between">
       <div class="left between-cont">
-        <left-cont @historyallAountMonth="historyallAountMonth"/>
+        <left-cont
+          :is-websocket="isWebsocket"
+          @historyallAountMonth="historyallAountMonth"/>
       </div>
-      <div>
+      <div class="centerClass">
         <my-map/>
         <bottom-cont/>
       </div>
       <div class="right between-cont">
-        <right-cont/>
-        <!-- <right-warn :data-config="infoTop"/> -->
+
+        <right-warn
+          v-if="isWebsocket"
+          :data-config="infoTop"/>
+        <right-cont v-else/>
       </div>
     </div>
+    <audio
+      id="eventAudio"
+      :src="audioSrc"
+      loop="loop"
+      hidden/>
   </div>
 </template>
 <script>
@@ -80,8 +95,11 @@ export default {
       communicationNum: 0,
       allAountMonth: 0,
       websocket: null,
-      infoTop: {title: '告警信息', haveInfo: true, showNext: true, infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '设备位置：', key: 'placeAddress', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '任务状态：', key: 'fConfirmState', val: '无', showColor: true, showHead: false, showtitle: true}]},
-      imgArr: ['']
+      infoTop: {title: '告警信息', haveInfo: true, showNext: true, warnAdress: '', homeManager: '', infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}]},
+      imgArr: [''],
+      audioSrc: require('../assets/audio/True_and_false.mp3'),
+      websocketData: {'list': [{'alarmState': '1', 'alarmTime': '2020-01-24 15:55:45', 'areaId': '1908011325111026', 'areaName': '海宁月子中心', 'city': '嘉兴市', 'detailLogId': '418113723295870976', 'fId': '190801151521649061', 'fState': '1', 'facilityAlias': '1楼母婴体验区室内消防栓没有用', 'facilityId': '170176053800', 'facilitySecondPosition': '母婴体验区室内消防栓', 'facilityType': '6', 'homeId': '190801142005407384', 'homeManager': '沈屹东', 'homeManagerPhone': '13957352609', 'houseName': '海宁月子中心1楼', 'houseNumber': '海宁月子中心1楼', 'logId': '418113723077767168', 'managerId': '1808081739400245', 'placeAddress': '硖石街道钱江东路99号', 'placeId': '190801141641248806', 'placeName': '海宁月子中心1楼', 'placePrincipal': '於国庆', 'placePrincipalPhone': '13606730606', 'positionX': '120.701111', 'positionY': '30.502397', 'prefecture': '海宁市', 'province': '浙江省', 'tableType': '', 'town': '请选择乡/镇'}, {'alarmState': '1', 'alarmTime': '2020-01-24 15:55:45', 'areaId': '1908011325111026', 'areaName': '海宁月子中心', 'city': '嘉兴市', 'detailLogId': '418113723295870976', 'fId': '190801151521649061', 'fState': '1', 'facilityAlias': '1楼母婴体验区室内消防栓没有用', 'facilityId': '170176053800', 'facilitySecondPosition': '母婴体验区室内消防栓', 'facilityType': '6', 'homeId': '190801142005407384', 'homeManager': '沈屹东', 'homeManagerPhone': '13957352609', 'houseName': '海宁月子中心1楼', 'houseNumber': '海宁月子中心1楼', 'logId': '418113723077767168', 'managerId': '1908011416291727', 'placeAddress': '硖石街道钱江东路99号', 'placeId': '190801141641248806', 'placeName': '海宁月子中心1楼', 'placePrincipal': '於国庆', 'placePrincipalPhone': '13606730606', 'positionX': '120.701111', 'positionY': '30.502397', 'prefecture': '海宁市', 'province': '浙江省', 'tableType': '', 'town': '请选择乡/镇'}], 'operation': '1'},
+      isWebsocket: false
     }
   },
   computed: {
@@ -103,6 +121,11 @@ export default {
     this.initWebsocket()
   },
   methods: {
+    playAudio() {
+      let buttonAudio = document.getElementById('eventAudio');
+      buttonAudio.setAttribute('src', this.audioSrc)
+      buttonAudio.play()
+    },
     async getFacilityCommunication() {
       try {
         let res = await this.$http.post('/facilityInfo/countFacilityCommunication.do', this.params)
@@ -133,6 +156,56 @@ export default {
       this.websocket.onopen = () => {
         console.log('连接成功，当前时间' + new Date());
       };
+
+      this.websocket.onmessage = (event) => {
+
+        // let websocketData = this.websocketData.list[0]
+        // websocket接收信息
+        this.isWebsocket = true
+        this.playAudio()
+        let websocketData = JSON.parse(event.data).list[0]
+        this.infoTop.warnAdress = websocketData.areaName
+        this.infoTop.homeManager = websocketData.homeManager
+        Object.keys(websocketData).forEach(e => {
+          this.infoTop.infoArr.forEach(element => {
+            if (element.key == e) {
+              if (element.key == 'facilityType') {
+                switch (websocketData[e]) {
+                  case '0':
+                    element.val = '智能烟感'
+                    break;
+                  case '1':
+                    element.val = '智能气感'
+                    break;
+                  case 2:
+                  case 5:
+                    console.log(1111)
+                    element.val = '液压液位检测'
+                    break;
+                  case '3':
+                    element.val = '智慧用电'
+                    break;
+                  case '4':
+                    element.val = '监控'
+                    break;
+                  case '6':
+                    element.val = '液压液位检测'
+                    break;
+                  case '7':
+                    element.val = '智能消防栓'
+                    break;
+                  default:
+                    element.val = '智能消防栓'
+                }
+
+              } else {
+                element.val = `${websocketData[e]}`
+              }
+
+            }
+          })
+        })
+      }
     }
   }
 };
@@ -199,6 +272,9 @@ export default {
     }
     .between-cont{
       width: 28.75rem;
+    }
+    .centerClass{
+      margin-top:4rem;
     }
   }
 }

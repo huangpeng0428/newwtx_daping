@@ -27,7 +27,9 @@
         </div>
       </div>
     </div>
-    <div class="left-cont-bottom">
+    <div
+      v-if="!isWebsocket"
+      class="left-cont-bottom">
       <div class="flex title f-between vertical">
         <div class="flex vertical">
           <img src="../assets/image/tongji.png" >
@@ -155,6 +157,14 @@ export default {
       lineChart,
       itemData,
       infoData
+    },
+    props: {
+      isWebsocket: {
+        type: Boolean,
+        default() {
+          return false
+        }
+      }
     },
     data() {
       return {
