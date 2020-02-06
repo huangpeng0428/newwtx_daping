@@ -118,7 +118,7 @@
           <img
             class="pointer pdd-lr-10"
             src="../assets/image/lbIcon.png"
-            @click="showInfo('isShowInfo', true, '')">
+            @click="showInfo('isShowInfo', true, item)">
         </div>
       </div>
       <div class="tex-left">
@@ -139,7 +139,17 @@
       <div
         v-if="isShowInfo"
         class="abl-info">
-        <info-data @hiddenInfo="hiddenInfo"/>
+        <info-data @hiddenInfo="hiddenInfo">
+          <div class="info-solt">
+            <div class="flex solt-item">
+              <div v-text="facilityInfo.state?'在线':'离线'"/>
+            </div>
+            <div
+              v-for="(item,index) in facilityInfo.info"
+              :key="index"
+              class="solt-item">{{ item.title }}：{{ item.value }}</div>
+          </div>
+        </info-data>
       </div>
     </div>
   </div>
@@ -195,7 +205,8 @@ export default {
         itemStyle: {
           width: '8rem',
           height: '0.5rem'
-        }
+        },
+        facilityInfo: {info: []}
       }
     },
     computed: {
@@ -271,18 +282,41 @@ export default {
         // this.showMask = showMask
       },
       async showInfo(res, flat, data) {
-        if (flat) {
-          if (data) {
-            let params = JSON.parse(JSON.stringify(this.params))
-            let sum = 0
-            if (data.ftype == 0) params['sum'] = sum
-            params['type'] = data.ftype
-            try {
-              let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
-              this.listByType = res
-            } catch (error) {
+        if (res == 'isShowList') {
+          if (flat) {
+            if (data) {
+              console.log(data)
+              let params = JSON.parse(JSON.stringify(this.params))
+              let sum = 0
+              if (data.ftype == 0) params['sum'] = sum
+              params['type'] = data.ftype
+              try {
+                let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
+                this.listByType = res
+              } catch (error) {
+              }
             }
           }
+        } else {
+            try {
+              let params = {
+                type: data.fType,
+                facilityinfoId: data.facilityinfoId
+              }
+              let res = await this.$http.post('/facilityInfo/queryFacilityInfo.do', params)
+              console.log(res)
+              this.facilityInfo = {state: res[0].isOnline,
+              info: [
+                {'title': '告警时间', 'value': util.formatTime(res[0].fTime, 'Y/M/D h:m:s') || '无'},
+                {'title': '备注', 'value': res[0].fAlias || '无'},
+                {'title': 'IMEI', 'value': res[0].ModelNumber || '无'},
+                {'title': '设备ID', 'value': res[0].facilityinfoId || '无'},
+                {'title': '安装时间', 'value': util.formatTime(res[0].CreateTime, 'Y/M/D h:m:s') || '无'},
+                {'title': '安装位置', 'value': res[0].facilitySecondPosition || '无'}
+                ]
+              }
+            } catch (error) {
+            }
         }
         this[res] = flat
 
@@ -460,6 +494,13 @@ export default {
         top: 0;
         transform: translateX(100%);
         z-index: 1000;
+        .info-solt{
+          text-align: left;
+          padding: 0 1.3rem;
+          .solt-item{
+            margin-bottom:1rem;
+          }
+        }
       }
     }
 }

@@ -47,7 +47,32 @@ export default {
     },
     random(a, b) {
 		return parseInt(Math.floor(Math.random() * (b - a + 1)) + a);
-	},
+    },
+
+    // 数据转化
+    formatNumber(n) {
+        n = n.toString()
+        return n[1] ? n : '0' + n
+    },
+
+    formatTime(number, format) {
+        let formateArr = ['Y', 'M', 'D', 'h', 'm', 's'];
+        let returnArr = [];
+
+        let date = new Date(number);
+        returnArr.push(date.getFullYear());
+        returnArr.push(this.formatNumber(date.getMonth() + 1));
+        returnArr.push(this.formatNumber(date.getDate()));
+
+        returnArr.push(this.formatNumber(date.getHours()));
+        returnArr.push(this.formatNumber(date.getMinutes()));
+        returnArr.push(this.formatNumber(date.getSeconds()));
+
+        for (let i in returnArr) {
+          format = format.replace(formateArr[i], returnArr[i]);
+        }
+        return format;
+      },
 
     // md5加密
     MD5(string) {

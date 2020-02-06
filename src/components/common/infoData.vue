@@ -14,13 +14,16 @@
             v-if="dataConfig.showNext"
             class="pdd-lr-10"
             src="../../assets/image/goright.png" >
-            <!-- <img
+          <img
+            v-if="dataConfig.showClose"
             class="pointer"
             src="../../assets/image/close.png"
-            @click="hiddenInfo" > -->
+            @click="hiddenInfo" >
         </div>
       </div>
-      <div class="right-top-cont">
+      <div
+        v-if="!dataConfig.showsolt"
+        class="right-top-cont">
         <div v-if="dataConfig.haveInfo">
           <div
             v-for="(item,index) in dataConfig.infoArr"
@@ -52,6 +55,9 @@
           暂无
         </div>
       </div>
+      <slot v-if="dataConfig.showsolt">
+        <p>如果父组件没用插入内容,我将作为默认出现</p>
+      </slot>
     </div>
   </div>
 </template>
@@ -62,7 +68,7 @@ export default {
       dataConfig: {
         type: Object,
         default() {
-          return {title: '近期告警任务', haveInfo: false, showNext: true}
+          return {title: '设备详情', haveInfo: false, showNext: true, showClose: true, showsolt: true}
         }
       }
     },

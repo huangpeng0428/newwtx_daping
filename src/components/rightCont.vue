@@ -144,8 +144,8 @@ export default {
         },
         infoTopObj: {},
         infoTopIndex: 0,
-        infoTop: {title: '近期告警任务', haveInfo: true, showNext: true, infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '设备位置：', key: 'placeAddress', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '任务状态：', key: 'fConfirmState', val: '无', showColor: true, showHead: false, showtitle: true}]},
-        infoBottom: {title: '相关负责人信息', haveInfo: false, showNext: false, infoArr: [{title: '', key: 'fAreaName', val: '无', showColor: true, showHead: false, showtitle: false}, {title: '法人：', key: 'fVillagePrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '法人电话：', key: 'fVillagePhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人：', key: 'fAreaPrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人电话：', key: 'fAreaPhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '地址：', key: 'fAreaAddress', val: '无', showColor: false, showHead: false, showtitle: true}]}
+        infoTop: {title: '近期告警任务', haveInfo: true, showNext: true, showClose: false, showsolt: false, infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '设备位置：', key: 'placeAddress', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '任务状态：', key: 'fConfirmState', val: '无', showColor: true, showHead: false, showtitle: true}]},
+        infoBottom: {title: '相关负责人信息', haveInfo: false, showNext: false, showClose: false, showsolt: false, infoArr: [{title: '', key: 'fAreaName', val: '无', showColor: true, showHead: false, showtitle: false}, {title: '法人：', key: 'fVillagePrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '法人电话：', key: 'fVillagePhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人：', key: 'fAreaPrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人电话：', key: 'fAreaPhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '地址：', key: 'fAreaAddress', val: '无', showColor: false, showHead: false, showtitle: true}]}
       }
     },
     computed: {
@@ -199,7 +199,6 @@ export default {
       'newNserAddress': {
         handler(newval, oldval) {
           if (newval.province != '' && newval.province != oldval.province) {
-            this.getAllCity()
 
             this.userAddress.city = ''
             this.userAddress.prefecture = ''
@@ -209,6 +208,10 @@ export default {
             this.placeList = []
             this.areaList = []
             newval.city = ''
+            newval.prefecture = ''
+            newval.areaName = ''
+
+            this.getAllCity()
           }
           if (newval.city != '' && newval.city != oldval.city) {
             this.userAddress.prefecture = ''
@@ -226,6 +229,7 @@ export default {
             this.placeList = []
 
             // this.userAddress.placeName = ''
+            console.log(newval.prefecture, 222)
             this.getAllArea()
           }
           if (newval.areaName != '' && newval.areaName != oldval.areaName) {
@@ -241,14 +245,17 @@ export default {
           //   // this.userAddress.placeName = ''
           //   this.getAllPlace()
           // }
-          newval['placeId'] = this.areaId
 
-          // console.log('newval', newval)
-          this.setadressInfo(newval)
-          newval['userId'] = this.loginCookie
-          this.params = util.getparams(newval)
+          setTimeout(() => {
+            newval['placeId'] = this.areaId
+            console.log('newval', newval)
 
-          this.getWarningTask()
+            this.setadressInfo(newval)
+            newval['userId'] = this.loginCookie
+            this.params = util.getparams(newval)
+
+            this.getWarningTask()
+          }, 600);
         },
         deep: true
       }
@@ -284,8 +291,9 @@ export default {
         params['page'] = 1
         try {
           let res = await this.$http.post('/facilityInfo/countFacilityWarningTaskTo30DaysGZ.do', params)
-          this.infoTopObj = res[this.infoTopIndex]
-          console.log(this.infoTopObj)
+          if (res.length) {
+            this.infoTopObj = res[this.infoTopIndex]
+          }
         } catch (error) {
           alert(error.message)
         }
@@ -335,6 +343,7 @@ export default {
         }
       },
       async getAllArea() {
+        console.log(this.userAddress.prefecture, 111)
         let params = {
           userID: this.loginCookie,
           prefecture: this.userAddress.prefecture

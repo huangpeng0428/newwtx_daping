@@ -1,5 +1,5 @@
 <template>
-  <div class="bottomCont">
+  <div class="bottomCont flex f-between ">
     <div class="cont-list flex vertical pointer">
       <div
         v-for="(item, index) in echartsData"
@@ -9,6 +9,16 @@
         @click="clickItem(index)">
         {{ item }}
       </div>
+    </div>
+    <div class="loginout flex vertical horizontal">
+      <img
+        class="pointer"
+        src="../assets/image/refresh.png"
+        @click="bottomClick('refresh')">
+      <img
+        class="pointer"
+        src="../assets/image/loginout.png"
+        @click="bottomClick('loginout')">
     </div>
     <div class="abs-cont">
       <div v-if="showEchart">
@@ -58,7 +68,7 @@
 </template>
 <script>
 import weekChart from './common/weekChart'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import util from '../lib/util'
 export default {
     name: 'BottomCont',
@@ -97,6 +107,16 @@ export default {
     mounted() {
     },
     methods: {
+        bottomClick(str) {
+          if (str == 'loginout') {
+            this.$router.push({path: '/login'})
+            this.$cookies.remove('loginCookie')
+            this.setloginCookie('')
+          } else {
+            history.go(0)
+          }
+
+        },
         closeEcharts(str) {
             if (str == 'list') this.showList = false
             else this.showEchart = false
@@ -173,7 +193,8 @@ export default {
           } catch (error) {
             alert(error.message)
           }
-        }
+        },
+        ...mapActions('userInfo', {'setloginCookie': 'actionsloginCookie'})
     }
 }
 </script>
@@ -188,6 +209,14 @@ export default {
       border-radius:2rem;
       margin: 0 0.75rem;
       color: #FFFFFF;
+    }
+    .loginout{
+      flex: 1;
+      img{
+        width: 2rem;
+        height: 2rem;
+        margin: 0 1rem;
+      }
     }
     .action{
         color: rgba(56,89,255,1);
