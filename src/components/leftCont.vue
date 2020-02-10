@@ -9,7 +9,7 @@
         </div>
         <div class="day">
           <p style="font-size:1.75rem;">周五12:35</p>
-          <p>2020年01月03日</p>
+          <p>2020年02月10日</p>
         </div>
       </div>
       <div class="number-cont flex f-evenly vertical">
@@ -141,8 +141,16 @@
         class="abl-info">
         <info-data @hiddenInfo="hiddenInfo">
           <div class="info-solt">
-            <div class="flex solt-item">
+            <div class="flex solt-item f-between">
               <div v-text="facilityInfo.state?'在线':'离线'"/>
+              <div
+                v-if="type != 4"
+                v-text="facilityInfo.BatteryLevel ? +'电量：'+facilityInfo.BatteryLevel : '电量：100' + '%'"/>
+              <div v-else><img
+                class="pointer"
+                style="width:2rem;height:2rem;"
+                src="../assets/image/playvideo.png"
+                @click="playVideo"></div>
             </div>
             <div
               v-for="(item,index) in facilityInfo.info"
@@ -206,7 +214,8 @@ export default {
           width: '8rem',
           height: '0.5rem'
         },
-        facilityInfo: {info: []}
+        facilityInfo: {info: []},
+        type: 0
       }
     },
     computed: {
@@ -239,17 +248,27 @@ export default {
     },
     methods: {
       async getcountFacility() {
-        this.allAount = 0
-        try {
-          let res = await this.$http.post('/facilityInfo/countFacility.do', this.params)
-          this.facilityList.forEach((e, i) => {
-            res.forEach(item => {
-              if (e.ftype == item.ftype) e.count = item.countFid
-            })
-            this.allAount += e.count
-          });
-        } catch (error) {
+        let allAount = 0
+        let isFlag = true
+        if (isFlag) {
+          try {
+            isFlag = false
+            let res = await this.$http.post('/facilityInfo/countFacility.do', this.params)
+            isFlag = true
+            this.facilityList.forEach((e, i) => {
+              res.forEach(item => {
+                if (e.ftype == item.ftype) {
+                  e.count = item.countFid
+                }
+              })
+
+              allAount += e.count
+              this.allAount = allAount
+            });
+          } catch (error) {
+          }
         }
+
       },
       async getcountMonth() {
         this.chartData = []
@@ -290,6 +309,7 @@ export default {
               let sum = 0
               if (data.ftype == 0) params['sum'] = sum
               params['type'] = data.ftype
+              this.type = data.ftype
               try {
                 let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
                 this.listByType = res
@@ -307,7 +327,7 @@ export default {
               console.log(res)
               this.facilityInfo = {state: res[0].isOnline,
               info: [
-                {'title': '告警时间', 'value': util.formatTime(res[0].fTime, 'Y/M/D h:m:s') || '无'},
+                {'title': '告警时间', 'value': res[0].fTime ? util.formatTime(res[0].fTime, 'Y/M/D h:m:s') : '无'},
                 {'title': '备注', 'value': res[0].fAlias || '无'},
                 {'title': 'IMEI', 'value': res[0].ModelNumber || '无'},
                 {'title': '设备ID', 'value': res[0].facilityinfoId || '无'},
@@ -325,6 +345,9 @@ export default {
       hiddenInfo() {
 
         this.isShowInfo = false
+      },
+      playVideo() {
+        alert('功能正在加紧完善中...')
       }
     }
 }

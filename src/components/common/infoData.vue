@@ -46,7 +46,7 @@
             </div>
             <div
               v-if="item.showHead"
-              class="item-right">
+              class="item-right pointer">
               负责人
             </div>
           </div>
@@ -62,6 +62,7 @@
   </div>
 </template>
 <script>
+import Bus from '../../bus.js'
 export default {
     name: 'InfoData',
     props: {
@@ -78,6 +79,11 @@ export default {
       }
     },
     computed: {
+    },
+    mounted() {
+      Bus.$on('showHeander', () => {
+
+      })
     },
     methods: {
       hiddenInfo() {

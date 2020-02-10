@@ -30,7 +30,8 @@
           :fault-arr="faultArr"
           :warn-arr="warnArr"
           :title-arr="titleArr"
-          @closeEcharts="closeEcharts"/>
+          @closeEcharts="closeEcharts"
+          @exportData="exportData"/>
       </div>
       <div
         v-if="showList"
@@ -59,6 +60,10 @@
           </div>
         </div>
         <img
+          class="week-export pointer"
+          src="../assets/image/echarts1111.png"
+          @click="exportData">
+        <img
           class="week-close pointer"
           src="../assets/image/close.png"
           @click="closeEcharts('list')">
@@ -70,6 +75,7 @@
 import weekChart from './common/weekChart'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import util from '../lib/util'
+import config from '../lib/config'
 export default {
     name: 'BottomCont',
     components: {
@@ -78,6 +84,7 @@ export default {
     data() {
         return {
             echartsData: ['7日数量', '7日状态', '地区分布'],
+            exporturl: '',
             showEchart: false,
             showList: false,
             selected: null,
@@ -122,15 +129,21 @@ export default {
             else this.showEchart = false
             this.selected = null
         },
+        exportData() {
+          let url = config.HTTPURL + this.exporturl + '?userId=' + this.params.userId + '&province=' + this.params.province + '&sign=' + this.params.sign
+          window.location.href = url
+        },
         clickItem(i) {
           if (i == 2) {
               this.showList = true
               this.showEchart = false
+              this.exporturl = '/excel/exportFacilityDistributionInfo.do'
               this.getAdressData()
           } else {
               this.showList = false
               this.showEchart = true
               let posturl = i == '0' ? '/facilityInfo/countFacilityTo7DaysByType.do' : '/facilityInfo/countFacilityTo7DaysByStateGZ.do'
+              this.exporturl = i == '0' ? '/excel/export7DaysFacilityCountInfo.do' : '/excel/export7DaysFacilityStateInfo.do'
               this.getChartData(posturl, i)
           }
           this.selected = i
@@ -189,7 +202,6 @@ export default {
                 this.warnArr.push(element.warn)
               });
             }
-            console.log(this.offlineArr)
           } catch (error) {
             alert(error.message)
           }
@@ -288,6 +300,13 @@ export default {
                 line-height: 1.25rem;
                 top: -0.5rem;
                 right: -0.5rem;
+            }
+            .week-export{
+                position: absolute;
+                width: 1.8rem;
+                line-height: 1.25rem;
+                top: 0.5rem;
+                right: 1.5rem;
             }
         }
     }

@@ -6,6 +6,10 @@
       class="week-chart"/>
     <div class="weekimg">7日设备数量统计</div>
     <img
+      class="week-export pointer"
+      src="../../assets/image/echarts1111.png"
+      @click="exportData">
+    <img
       class="week-close pointer"
       src="../../assets/image/close.png"
       @click="closeEcharts">
@@ -87,6 +91,9 @@ export default {
     methods: {
         closeEcharts() {
             this.$emit('closeEcharts')
+        },
+        exportData() {
+            this.$emit('exportData')
         },
         setweekCharts() {
            this.weekChart = this.$echarts.init(this.$refs.weekChart)
@@ -204,6 +211,13 @@ export default {
     line-height: 1.25rem;
     top: -0.5rem;
     right: -0.5rem;
+}
+.week-export{
+    position: absolute;
+    width: 1.8rem;
+    line-height: 1.25rem;
+    top: 0.5rem;
+    right: 1.5rem;
 }
 </style>
 
