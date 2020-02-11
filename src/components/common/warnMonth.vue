@@ -176,6 +176,9 @@ export default {
     methods: {
         hiddenWarn() {
             this.$emit('hiddenWarn')
+        },
+        clickResult() {
+            console.log(11)
         }
     }
 }
