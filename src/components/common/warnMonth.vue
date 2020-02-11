@@ -20,7 +20,9 @@
           class="warnMonth-item">
           <div class="padb flex f-between">
             <p>告警时间：{{ item.alarmTime }}</p>
-            <div class="warnMonth-item-btn">{{ item.Result }}</div>
+            <div
+              class="warnMonth-item-btn pointer"
+              @click="clickResult(item.Result)">{{ item.Result }}</div>
           </div>
           <div class="padb flex vertical">
             <p>告警设备：</p>

@@ -75,16 +75,50 @@
       <div class="select-item item-facility flex f-between">
         <select
           id="placeName"
+          v-model="placeSelected"
           class="selectop input-selectop"
-          onchange="bsheng() ">
-          <option>搜索设备</option>
+          @change="changePlace">
+          <option value="1">搜地点</option>
+          <option value="2">搜索所有设备</option>
         </select>
         <input
+          v-model="placeValue"
+          :placeholder="placeSelected == '1'?'输入您要搜索的地点':'输入您要搜索的设备名称'"
           class="select-input"
-          placeholder="输入您需要搜索的关键词">
+          @input="getlikeSearchList">
+        <img
+          v-if="placeSelected == '1'"
+          class="searchImg pointer"
+          src="../assets/image/search.png"
+          @click="clickPlace">
+        <div
+          v-if="placeValue && showlikeSearch"
+          class="likeSearch">
+          <div
+            v-for="(item, index) in likeSearchList"
+            :key="index"
+            class="flex vertical likeSearchItem pointer"
+            @click="isShowInfo(item.fType,item.fID)">
+            <img
+              v-if="item.fType == '0'"
+              src="../assets/image/type_smoke.png">
+            <img
+              v-if="item.fType == '1'"
+              src="../assets/image/type_gas.png">
+            <img
+              v-if="item.fType == '2'"
+              src="../assets/image/type_water.png">
+            <img
+              v-if="item.fType == '3'"
+              src="../assets/image/type_electric.png">
+            {{ item.fEntityFacilityID }}
+          </div>
+        </div>
       </div>
     </div>
-    <info-data :data-config="infoTop"/>
+    <info-data
+      :data-config="infoTop"
+      @getNext="getNext"/>
     <info-data :data-config="infoBottom"/>
     <!-- <div class="right-bottom right-img">
       <div class="flex f-between right-top-title">
@@ -145,7 +179,12 @@ export default {
         infoTopObj: {},
         infoTopIndex: 0,
         infoTop: {title: '近期告警任务', haveInfo: true, showNext: true, showClose: false, showsolt: false, infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '设备位置：', key: 'placeAddress', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '任务状态：', key: 'fConfirmState', val: '无', showColor: true, showHead: false, showtitle: true}]},
-        infoBottom: {title: '相关负责人信息', haveInfo: false, showNext: false, showClose: false, showsolt: false, infoArr: [{title: '', key: 'fAreaName', val: '无', showColor: true, showHead: false, showtitle: false}, {title: '法人：', key: 'fVillagePrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '法人电话：', key: 'fVillagePhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人：', key: 'fAreaPrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人电话：', key: 'fAreaPhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '地址：', key: 'fAreaAddress', val: '无', showColor: false, showHead: false, showtitle: true}]}
+        infoBottom: {title: '相关负责人信息', haveInfo: false, showNext: false, showClose: false, showsolt: false, infoArr: [{title: '', key: 'fAreaName', val: '无', showColor: true, showHead: false, showtitle: false}, {title: '法人：', key: 'fVillagePrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '法人电话：', key: 'fVillagePhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人：', key: 'fAreaPrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人电话：', key: 'fAreaPhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '地址：', key: 'fAreaAddress', val: '无', showColor: false, showHead: false, showtitle: true}]},
+        WarningTaskList: [],
+        placeSelected: '1',
+        placeValue: '',
+        likeSearchList: [],
+        showlikeSearch: false
       }
     },
     computed: {
@@ -179,7 +218,6 @@ export default {
               }
             });
           });
-          console.log(this.infoTop)
 
           // this.infoBottom = Object.assign({}, this.bootomConfig, val)
         }
@@ -291,12 +329,23 @@ export default {
         params['page'] = 1
         try {
           let res = await this.$http.post('/facilityInfo/countFacilityWarningTaskTo30DaysGZ.do', params)
+          this.WarningTaskList = res
           if (res.length) {
             this.infoTopObj = res[this.infoTopIndex]
           }
         } catch (error) {
           alert(error.message)
         }
+      },
+      getNext(str) {
+        if (str == 'right' && this.infoTopIndex < this.WarningTaskList.length) {
+          this.infoTopIndex ++
+        }
+        if (str == 'left' && this.infoTopIndex > 0) {
+          this.infoTopIndex --
+        }
+        this.infoTopObj = this.WarningTaskList[this.infoTopIndex]
+
       },
       async getAllProvince() {
         try {
@@ -419,6 +468,36 @@ export default {
             break
         }
       },
+      changePlace() {
+        this.placeValue = ''
+      },
+      clickPlace() {
+        this.eventObj.DM = this.placeValue
+        console.log(this.eventObj)
+        Bus.$emit('initialmap', this.eventObj)
+      },
+      async getlikeSearchList() {
+        if (this.placeValue == '' || this.placeSelected == '1') return
+        let params = this.params
+        params['param'] = this.placeValue
+        params['type'] = ''
+        try {
+          let res = await this.$http.post('/search/likeSearch.do', params)
+          if (res.list.length > 100) {
+            res.list = res.list.splice(1, 100)
+          }
+          this.likeSearchList = res.list
+          if (this.likeSearchList.length) {
+            this.showlikeSearch = true
+          }
+        } catch (error) {
+          alert(error.message)
+        }
+      },
+      isShowInfo(fType, facilityinfoId) {
+        this.showlikeSearch = false
+        Bus.$emit('clickShowInfo', {fType: fType, facilityinfoId: facilityinfoId})
+      },
       ...mapActions('mapInfo', {'setadressInfo': 'actionsadressInfo'})
     }
 }
@@ -456,8 +535,35 @@ export default {
                    margin-left: 1rem;
                }
                .select-input{
-                  width: 16rem;
-                  margin-right: 2rem;
+                  width: 17rem;
+                  margin-right: 3rem;
+               }
+               .searchImg{
+                 position: absolute;
+                 width: 1.5rem;
+                 height: 1.5rem;
+                 right: 2rem;
+                 top: 1.5rem;
+               }
+               .likeSearch{
+                  background: #00195E;
+                  width: 20rem;
+                  height: 25.5rem;
+                  position: absolute;
+                  top: 4rem;
+                  right: .2rem;
+                  overflow-y: scroll;
+                  overflow-x: hidden;
+               }
+               .likeSearchItem{
+                 padding: 0 1rem;
+                 height:3rem;
+               }
+               .likeSearchItem:hover {
+                 background: #253F7F;
+               }
+               #placeName{
+                //  padding-right: 1rem;
                }
             }
         }

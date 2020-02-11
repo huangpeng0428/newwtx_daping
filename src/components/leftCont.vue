@@ -245,6 +245,9 @@ export default {
         this.getcountFacility()
         this.getFacilityState()
       })
+      Bus.$on('clickShowInfo', (data) => {
+        this.showInfo('isShowInfo', true, data)
+      })
     },
     methods: {
       async getcountFacility() {
@@ -324,7 +327,6 @@ export default {
                 facilityinfoId: data.facilityinfoId
               }
               let res = await this.$http.post('/facilityInfo/queryFacilityInfo.do', params)
-              console.log(res)
               this.facilityInfo = {state: res[0].isOnline,
               info: [
                 {'title': '告警时间', 'value': res[0].fTime ? util.formatTime(res[0].fTime, 'Y/M/D h:m:s') : '无'},

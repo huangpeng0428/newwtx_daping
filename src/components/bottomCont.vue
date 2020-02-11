@@ -36,8 +36,12 @@
       <div
         v-if="showList"
         class="rel region-list">
-        <div class="regionimg">地区分布</div>
-        <div class="region-item-cont">
+        <div
+          v-if="!showCount"
+          class="regionimg">地区分布</div>
+        <div
+          v-if="!showCount"
+          class="region-item-cont">
           <div
             v-for="(item, index) in adressList"
             :key="index"
@@ -59,7 +63,12 @@
             </div>
           </div>
         </div>
+        <item-data
+          v-if="showCount"
+          :state-data="stateData"
+          style="color:#fff"/>
         <img
+          v-if="!showCount"
           class="week-export pointer"
           src="../assets/image/echarts1111.png"
           @click="exportData">
@@ -76,14 +85,16 @@ import weekChart from './common/weekChart'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import util from '../lib/util'
 import config from '../lib/config'
+import itemData from './common/itemData'
 export default {
     name: 'BottomCont',
     components: {
-        weekChart
+        weekChart,
+        itemData
     },
     data() {
         return {
-            echartsData: ['7日数量', '7日状态', '地区分布'],
+            echartsData: ['7日数量', '7日状态', '地区分布', '智能烟感', '智慧用电', '视频监控', '智慧消防', '智能气感', '液位液压'],
             exporturl: '',
             showEchart: false,
             showList: false,
@@ -96,7 +107,16 @@ export default {
             faultArr: [],
             warnArr: [],
             titleArr: [],
-            adressList: []
+            adressList: [],
+            stateData: [
+              {title: '在线', type: 'online', count: '', accountNum: '', color: '#8252FD'},
+              {title: '离线', type: 'offline', count: '', accountNum: '', color: '#E5901D'},
+              {title: '低电压', type: 'low', count: '', accountNum: '', color: '#408EFE'},
+              {title: '故障', type: 'fault', count: '', accountNum: '', color: '#05DBB0'},
+              {title: '告警', type: 'warn', count: '', accountNum: '', color: '#BE4596'}
+            ],
+            type: 0,
+            showCount: false
         }
     },
     computed: {
@@ -134,7 +154,34 @@ export default {
           window.location.href = url
         },
         clickItem(i) {
-          if (i == 2) {
+          if (i > 2) {
+            switch (i) {
+              case 3:
+                this.type = '0'
+                break;
+              case 4:
+                this.type = '3'
+                break;
+              case 5:
+                this.type = '4'
+                break;
+              case 6:
+                this.type = '1'
+                break;
+              case 7:
+                this.type = '7'
+                break;
+              case 8:
+                this.type = '2'
+                break;
+              default:
+                this.type = '0'
+                break;
+            }
+            this.showList = true
+            this.showEchart = false
+            this.getcountFacility()
+          } else if (i == 2) {
               this.showList = true
               this.showEchart = false
               this.exporturl = '/excel/exportFacilityDistributionInfo.do'
@@ -151,6 +198,7 @@ export default {
         async getAdressData() {
           try {
             let res = await this.$http.post('/facilityInfo/countAreaFacility.do', this.params)
+            this.showCount = false
             this.adressList = res['facility']
             let countAll = 0
             let color = ['#28a80a', '#3f51c0', '#ac9126', '#c11e1e']
@@ -162,7 +210,26 @@ export default {
               item['percent'] = `${Math.floor((item.countFid / countAll) * 100)}%`
               item['bg_color'] = color[num] || '#3f51c0'
             });
-            console.log(this.adressList)
+          } catch (error) {
+            alert(error.message)
+          }
+        },
+        async getcountFacility() {
+          let params = this.params
+          params['type'] = this.type
+          try {
+            let res = await this.$http.post('/facilityInfo/countFacilityState.do', params)
+            let allAount = res.online + res.offline + res.low + res.fault + res.warn
+            Object.keys(res).reduce((c, e, i) => {
+              c.forEach(element => {
+                if (element.type == e) {
+                  element.count = res[e]
+                  element.accountNum = `${Math.floor((res[e] / allAount) * 100)}%`
+                }
+              });
+              return c
+            }, this.stateData)
+            this.showCount = true
           } catch (error) {
             alert(error.message)
           }
@@ -219,7 +286,7 @@ export default {
       line-height: 2.5rem;
       background:linear-gradient(270deg,rgba(56,89,255,1) 0%,rgba(80,252,252,1) 100%);
       border-radius:2rem;
-      margin: 0 0.75rem;
+      margin: 0 0.25rem;
       color: #FFFFFF;
     }
     .loginout{
@@ -240,7 +307,7 @@ export default {
         top: -1rem;
         z-index: 100;
         .region-list{
-            height: 25rem;
+            max-height: 25rem;
             width: 23rem;
             background: url('../assets/image/left-bg-top.png');
             background-repeat: no-repeat;

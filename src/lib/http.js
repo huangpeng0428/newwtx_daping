@@ -8,7 +8,7 @@ import util from './util'
 
 const axios = Axios.create({
   baseURL: config.HTTPURL, // 设置请求域名
-  timeout: 12000,
+  timeout: 200000,
   headers: {
     'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
   }

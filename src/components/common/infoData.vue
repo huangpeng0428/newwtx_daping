@@ -6,14 +6,17 @@
           <img src="../../assets/image/gaojing.png" >
           <div class="pdd-lr-5">{{ dataConfig.title }}</div>
         </div>
-        <div class="flex vertical">
+        <div class="flex vertical ">
           <img
             v-if="dataConfig.showNext"
-            src="../../assets/image/goleft.png" >
+            class="pointer"
+            src="../../assets/image/goleft.png"
+            @click="getNext('left')" >
           <img
             v-if="dataConfig.showNext"
-            class="pdd-lr-10"
-            src="../../assets/image/goright.png" >
+            class="pdd-lr-10 pointer"
+            src="../../assets/image/goright.png"
+            @click="getNext('right')" >
           <img
             v-if="dataConfig.showClose"
             class="pointer"
@@ -41,7 +44,8 @@
               </div>
               <div
                 v-if="!item.showColor"
-                class="mrg-lr-15">{{ item.val }}
+                style="width: 12rem;"
+                class="mrg-lr-15 tex-overflow">{{ item.val }}
               </div>
             </div>
             <div
@@ -69,7 +73,7 @@ export default {
       dataConfig: {
         type: Object,
         default() {
-          return {title: '设备详情', haveInfo: false, showNext: true, showClose: true, showsolt: true}
+          return {title: '设备详情', haveInfo: false, showNext: false, showClose: true, showsolt: true}
         }
       }
     },
@@ -88,6 +92,9 @@ export default {
     methods: {
       hiddenInfo() {
         this.$emit('hiddenInfo')
+      },
+      getNext(flag) {
+        this.$emit('getNext', flag)
       }
     }
 }
