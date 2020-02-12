@@ -464,6 +464,7 @@ export default {
             this.eventObj.DM = ''
             this.eventObj.listpoint.push(fPositionX, fPositionY)
             this.eventObj.leval = 16
+            console.log('111111', this.eventObj)
             Bus.$emit('initialmap', this.eventObj)
             break
         }

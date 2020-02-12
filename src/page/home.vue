@@ -10,10 +10,10 @@
           class="warnImg"
           src="../assets/image/warn.png" >
         <div class="warnText">
-          2019年10月21日 11:41:50
-          <span class="warnColor">王林村新村5栋2单元</span>
-          南翔可出租房502室
-          <span class="warnColor">智能烟感</span>
+          {{ websocketData.alarmTime }}
+          <span class="warnColor">{{ websocketData.placeName }}</span>
+          {{ websocketData.facilitySecondPosition }}
+          <span class="warnColor">{{ infoTop.infoArr[1].val }}</span>
           发生
           <span class="warnColor">警告！</span>
         </div>
@@ -57,7 +57,8 @@
           v-else
           class="nomalIcon"
           src="../assets/image/logo.png"
-          alt="">
+          alt=""
+          @click="aaanomalIcon">
       </div>
     </div>
     <div class="content flex f-between">
@@ -74,7 +75,8 @@
 
         <right-warn
           v-if="isWebsocket"
-          :data-config="infoTop"/>
+          :data-config="infoTop"
+          @confirmBtn="confirmBtn"/>
         <right-cont v-else/>
       </div>
     </div>
@@ -101,6 +103,8 @@ import warnMonth from '../components/common/warnMonth';
 import { mapState, mapGetters } from 'vuex'
 import util from '../lib/util'
 import config from '../lib/config'
+
+import Bus from '../bus.js'
 export default {
   components: {
     MyMap,
@@ -120,11 +124,16 @@ export default {
       infoTop: {title: '告警信息', haveInfo: true, showNext: true, warnAdress: '', homeManager: '', infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}]},
       imgArr: [''],
       audioSrc: require('../assets/audio/True_and_false.mp3'),
-      websocketData: {'list': [{'alarmState': '1', 'alarmTime': '2020-01-24 15:55:45', 'areaId': '1908011325111026', 'areaName': '海宁月子中心', 'city': '嘉兴市', 'detailLogId': '418113723295870976', 'fId': '190801151521649061', 'fState': '1', 'facilityAlias': '1楼母婴体验区室内消防栓没有用', 'facilityId': '170176053800', 'facilitySecondPosition': '母婴体验区室内消防栓', 'facilityType': '6', 'homeId': '190801142005407384', 'homeManager': '沈屹东', 'homeManagerPhone': '13957352609', 'houseName': '海宁月子中心1楼', 'houseNumber': '海宁月子中心1楼', 'logId': '418113723077767168', 'managerId': '1808081739400245', 'placeAddress': '硖石街道钱江东路99号', 'placeId': '190801141641248806', 'placeName': '海宁月子中心1楼', 'placePrincipal': '於国庆', 'placePrincipalPhone': '13606730606', 'positionX': '120.701111', 'positionY': '30.502397', 'prefecture': '海宁市', 'province': '浙江省', 'tableType': '', 'town': '请选择乡/镇'}, {'alarmState': '1', 'alarmTime': '2020-01-24 15:55:45', 'areaId': '1908011325111026', 'areaName': '海宁月子中心', 'city': '嘉兴市', 'detailLogId': '418113723295870976', 'fId': '190801151521649061', 'fState': '1', 'facilityAlias': '1楼母婴体验区室内消防栓没有用', 'facilityId': '170176053800', 'facilitySecondPosition': '母婴体验区室内消防栓', 'facilityType': '6', 'homeId': '190801142005407384', 'homeManager': '沈屹东', 'homeManagerPhone': '13957352609', 'houseName': '海宁月子中心1楼', 'houseNumber': '海宁月子中心1楼', 'logId': '418113723077767168', 'managerId': '1908011416291727', 'placeAddress': '硖石街道钱江东路99号', 'placeId': '190801141641248806', 'placeName': '海宁月子中心1楼', 'placePrincipal': '於国庆', 'placePrincipalPhone': '13606730606', 'positionX': '120.701111', 'positionY': '30.502397', 'prefecture': '海宁市', 'province': '浙江省', 'tableType': '', 'town': '请选择乡/镇'}], 'operation': '1'},
+      websocketData: {},
       isWebsocket: false,
       isshowWarn: false,
       taskList: [],
-      showWarn: false
+      showWarn: false,
+      eventObj: {
+        DM: '',
+        listpoint: [],
+        leval: 6
+      }
     }
   },
   computed: {
@@ -190,11 +199,21 @@ export default {
       //   return
       // }
     },
+    aaanomalIcon() {
+
+      // this.eventObj.DM = ''
+      // this.eventObj.listpoint.push('116.83', '40.37')
+      // this.eventObj.leval = 16
+      // console.log('ssssss', this.eventObj)
+      // Bus.$emit('initialmap', this.eventObj)
+
+      // Bus.$emit('changeIcon')
+    },
     initWebsocket() {
       if ('WebSocket' in window) {
 
-      // this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
-      this.websocket = new WebSocket('ws://120.26.215.34:8080/IntelligentFire/websocket'); // 正式
+      this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
+      // this.websocket = new WebSocket('ws://120.26.215.34:8080/IntelligentFire/websocket'); // 正式
 
       } else {
         alert('当前浏览器 Not support websocket');
@@ -211,6 +230,12 @@ export default {
         this.isWebsocket = true
         this.playAudio()
         let websocketData = JSON.parse(event.data).list[0]
+        this.websocketData = websocketData
+        console.log(this.websocketData)
+        this.eventObj.DM = ''
+        this.eventObj.listpoint.push(this.websocketData.positionX, this.websocketData.positionY)
+        this.eventObj.leval = 16
+        Bus.$emit('initialmap', this.eventObj)
         this.infoTop.warnAdress = websocketData.areaName
         this.infoTop.homeManager = websocketData.homeManager
         Object.keys(websocketData).forEach(e => {
@@ -252,6 +277,38 @@ export default {
             }
           })
         })
+      }
+    },
+    async confirmBtn(str) {
+      console.log(str)
+      let postUrl = str == '1' ? '/realTimeAlarm/confirmAlarm.do' : ''
+
+      // let params = {
+      //   facilityID: this.websocketData.facilityId,
+      //   type: this.websocketData.facilityType,
+      //   logID: this.websocketData.logId,
+      //   userId: this.loginCookie,
+      //   state: '2',
+      //   tableType: this.websocketData.tableType,
+      //   timestamp: new Date().getTime(),
+      //   fTime: this.websocketData.alarmTime
+      // }
+      let params = {
+        facilityID: '321',
+        type: '0',
+        logID: '1525704622567',
+        userId: this.loginCookie,
+        state: '2',
+        tableType: '',
+        timestamp: new Date().getTime(),
+        fTime: '2020-02-13 02:13:32'
+      }
+      console.log(params)
+
+      try {
+        let res = await this.$http.post(postUrl, params)
+        console.log(res)
+      } catch (error) {
       }
     }
   }

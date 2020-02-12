@@ -20,7 +20,8 @@ export default {
       mass: {},
       data_info: [],
       rightInfoBottom: {},
-      marker: null
+      marker: null,
+      icon: require('../assets/image/mark1.png')
     };
   },
   computed: {
@@ -36,12 +37,14 @@ export default {
 
         // this.mass = null
         this.data_info = []
+
         this.getmark(val)
       }
     }
   },
   mounted() {
-    this.initMap();
+
+    this.initMap(this.icon);
     Bus.$on('initialmap', ({DM, listpoint, leval}) => {
 
       // console.log(DM, listpoint, leval)
@@ -49,18 +52,40 @@ export default {
       this.initsiteMap(DM, listpoint, leval)
     })
 
+    Bus.$on('changeIcon', () => {
+
+      // let icon = require('../assets/image/warnIcon.png')
+
+      // this.initMap(icon);
+
+      // console.log(DM, listpoint, leval)
+
+      // this.initsiteMap(DM, listpoint, leval)
+      this.map.remove(this.marker)
+
+      // this.styleObject = [{
+      //   url: require('../assets/image/warn.png'),  // 图标地址
+      //   anchor: new AMap.Pixel(16, 16), // 图标显示位置偏移量，基准点为图标左上角
+      //   size: new AMap.Size(25, 25)    // 图标大小
+      // }];
+      // console.log(this.styleObject)
+
+      // this.addMarkers()
+
+    })
+
     // this.initMark()
   },
   methods: {
     ...mapActions('mapInfo', {'setrightInfoBottom': 'actionsrightInfoBottom'}),
-    initMap() {
+    initMap(icon) {
       this.map = new AMap.Map('map-cont', {
         resizeEnable: true, // 是否监控地图容器尺寸变化
         mapStyle: 'amap://styles/darkblue'
       });
 
       this.styleObject = [{
-        url: require('../assets/image/mark1.png'),  // 图标地址
+        url: icon,  // 图标地址
         anchor: new AMap.Pixel(25, 25), // 图标显示位置偏移量，基准点为图标左上角
         size: new AMap.Size(50, 50)    // 图标大小
       }];
@@ -74,6 +99,7 @@ export default {
       // this.addMarkers()
     },
     addMarkers() {
+      console.log(this.styleObject)
       this.mass = new AMap.MassMarks(this.data_info, {
         zIndex: 999,
         cursor: 'pointer',
