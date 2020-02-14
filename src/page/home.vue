@@ -212,8 +212,8 @@ export default {
     initWebsocket() {
       if ('WebSocket' in window) {
 
-      this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
-      // this.websocket = new WebSocket('ws://120.26.215.34:8080/IntelligentFire/websocket'); // 正式
+      // this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
+      this.websocket = new WebSocket('ws://120.26.215.34:8080/IntelligentFire/websocket'); // 正式
 
       } else {
         alert('当前浏览器 Not support websocket');
@@ -280,35 +280,42 @@ export default {
       }
     },
     async confirmBtn(str) {
-      console.log(str)
-      let postUrl = str == '1' ? '/realTimeAlarm/confirmAlarm.do' : ''
+      let message = str == '1' ? '预警已确认' : '火警已确认'
+      let confirmStr = str == '1' ? '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。' : '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。'
+      if (confirm(confirmStr) == true) {
 
-      // let params = {
-      //   facilityID: this.websocketData.facilityId,
-      //   type: this.websocketData.facilityType,
-      //   logID: this.websocketData.logId,
-      //   userId: this.loginCookie,
-      //   state: '2',
-      //   tableType: this.websocketData.tableType,
-      //   timestamp: new Date().getTime(),
-      //   fTime: this.websocketData.alarmTime
-      // }
       let params = {
-        facilityID: '321',
-        type: '0',
-        logID: '1525704622567',
+        facilityID: this.websocketData.facilityId,
+        type: this.websocketData.facilityType,
+        logID: this.websocketData.logId,
         userId: this.loginCookie,
-        state: '2',
-        tableType: '',
+        state: str,
+        tableType: this.websocketData.tableType,
         timestamp: new Date().getTime(),
-        fTime: '2020-02-13 02:13:32'
+        fTime: this.websocketData.alarmTime
       }
-      console.log(params)
 
-      try {
-        let res = await this.$http.post(postUrl, params)
-        console.log(res)
-      } catch (error) {
+        // let params = {
+        //   facilityID: '321',
+        //   type: '0',
+        //   logID: '1525704622567',
+        //   userId: this.loginCookie,
+        //   state: str,
+        //   tableType: '',
+        //   timestamp: new Date().getTime(),
+        //   fTime: '2020-02-13 02:13:32'
+        // }
+        console.log(params)
+
+        try {
+          let res = await this.$http.post('/realTimeAlarm/confirmAlarm.do', params)
+          console.log(res)
+          if (res.state == '0') {
+            alert(message)
+            this.isWebsocket = false
+          }
+        } catch (error) {
+        }
       }
     }
   }
