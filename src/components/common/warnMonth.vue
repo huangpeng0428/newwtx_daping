@@ -21,8 +21,9 @@
           <div class="padb flex f-between">
             <p>告警时间：{{ item.alarmTime }}</p>
             <div
+              ref="confirmState"
               class="warnMonth-item-btn pointer"
-              @click="clickResult(item.Result)">{{ item.Result }}</div>
+              @click="clickResult(item.Result, index)">{{ item.Result }}</div>
           </div>
           <div class="padb flex vertical">
             <p>告警设备：</p>
@@ -80,17 +81,17 @@
               v-text="item.fConfirmState == '0' || item.fConfirmState == '1'? '(未完成)': item.fOperationTime"/>
           </div>
           <div
-            v-if="isConfirm"
+            v-if="confirmIndex == index && isConfirm"
             class="btn-list">
             <div
               class="confirm-btn btn-style pointer"
-              @click="confirmBtn('confirme', item)">确认为预警</div>
+              @click="confirmBtn('confirme', item, index)">确认为预警</div>
             <div
               class="fire-btn btn-style pointer"
-              @click="confirmBtn('fire', item)">确认为火警</div>
+              @click="confirmBtn('fire', item, index)">确认为火警</div>
             <div
               class="cancel-btn btn-style pointer"
-              @click="confirmBtn('cancel', item)">取消</div>
+              @click="confirmBtn('cancel', item, index)">取消</div>
           </div>
         </div>
       </div>
@@ -111,7 +112,8 @@ export default {
     },
     data() {
         return {
-          isConfirm: false
+          isConfirm: false,
+          confirmIndex: ''
 
         //    taskList: []
         }
@@ -183,7 +185,7 @@ export default {
                 }
 
                 if (!e.reason) {
-                    e['Result'] = '未确认'
+                    e['Result'] = '已完成'
                 }
             })
             }
@@ -196,12 +198,19 @@ export default {
         hiddenWarn() {
             this.$emit('hiddenWarn')
         },
-        clickResult(str) {
+        clickResult(str, i) {
+          console.log(i)
             if (str == '未确认') {
+                this.confirmIndex = i
                 this.isConfirm = true
             }
         },
-        async confirmBtn(str, obj) {
+        async confirmBtn(str, obj, i) {
+            if (str == 'cancel') {
+              this.isConfirm = false
+              return
+            }
+            let message = str == 'confirme' ? '预警已确认' : '火警已确认'
             let confirmStr = str == 'confirme' ? '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。' : '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。'
             let state = str == 'confirme' ? '2' : '1'
             if (confirm(confirmStr) == true) {
@@ -229,9 +238,14 @@ export default {
 
                 try {
                 let res = await this.$http.post('/realTimeAlarm/confirmAlarm.do', params)
-                console.log(res)
                 if (res.state == '0') {
+                  alert(message)
+                  this.isConfirm = false
+                  this.$refs.confirmState[i].innerHTML = '已完成';
 
+                  // document.getElementByClassName('confirmState').innerHTML = '已完成';
+                } else {
+                  alert('未知错误，请稍后再试')
                 }
                 } catch (error) {
                 }

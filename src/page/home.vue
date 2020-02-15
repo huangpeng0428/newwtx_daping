@@ -217,7 +217,6 @@ export default {
       // Bus.$emit('changeIcon')
     },
     initWebsocket() {
-      console.log(111)
       if ('WebSocket' in window) {
 
       this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
@@ -245,6 +244,7 @@ export default {
 
         // let websocketData = this.websocketData.list[0]
         // websocket接收信息
+        if (JSON.parse(event.data).operation != '1') return
         this.isWebsocket = true
         this.playAudio('play')
         let websocketData = JSON.parse(event.data).list[0]

@@ -233,13 +233,35 @@ export default {
                     element.val = '未确认'
                   }
                   if (val[e] == '1') {
-                    element.val = '确认为火情'
+                    element.val = '确认为预警'
                   }
                   if (val[e] == '2') {
-                    element.val = '确认为预警'
+                    element.val = '确认为火情'
                   }
                 } else {
                   element.val = val[e]
+
+                  // if (element.key == 'fConfirmState') {
+              //   if (e.reason == '1' || !e.reason) {
+              //     if (val['facilityType'] == '0') {
+              //         element.val = '未确认'
+              //     }
+              //     if (val['facilityType'] == '1') {
+              //       element.val = '确认为火情'
+              //     }
+              //     if (val['facilityType'] == '2') {
+              //       element.val = '确认为预警'
+              //     }
+              //   }
+              //   if (e.reason == '10') {
+              //     if (val['fFireOverState'] == '0') {
+              //         element.val = '未恢复'
+              //     }
+              //     if (val['fFireOverState'] == '1') {
+              //         element.val = '已恢复'
+              //     }
+              //   }
+              // }
                 }
               }
             });
