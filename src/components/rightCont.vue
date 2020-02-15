@@ -233,10 +233,10 @@ export default {
                     element.val = '未确认'
                   }
                   if (val[e] == '1') {
-                    element.val = '确认为预警'
+                    element.val = '确认为火警'
                   }
                   if (val[e] == '2') {
-                    element.val = '确认为火情'
+                    element.val = '确认为预情'
                   }
                 } else {
                   element.val = val[e]

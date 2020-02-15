@@ -210,7 +210,7 @@ export default {
               this.isConfirm = false
               return
             }
-            let message = str == 'confirme' ? '预警已确认' : '火警已确认'
+            let message = str == 'confirme' ? '预警已确认' : '火情已确认'
             let confirmStr = str == 'confirme' ? '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。' : '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。'
             let state = str == 'confirme' ? '2' : '1'
             if (confirm(confirmStr) == true) {

@@ -63,10 +63,10 @@
       <div class="flex vertical">
         <div
           class="warn-btn pointer"
-          @click="confirmBtn('1')">确认为预警</div>
+          @click="confirmBtn('2')">确认为预警</div>
         <div
           class="warn-btn right pointer"
-          @click="confirmBtn('2')">确认为火警</div>
+          @click="confirmBtn('1')">确认为火情</div>
       </div>
       <div class="item-right-warn flex f-between">
         <div class>负责人</div>
