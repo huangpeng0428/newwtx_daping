@@ -224,7 +224,11 @@ export default {
               c.forEach(element => {
                 if (element.type == e) {
                   element.count = res[e]
-                  element.accountNum = `${Math.floor((res[e] / allAount) * 100)}%`
+                  if (allAount) {
+                    element.accountNum = `${Math.floor((res[e] / allAount) * 100)}%`
+                  } else {
+                    element.accountNum = '0%'
+                  }
                 }
               });
               return c
@@ -248,9 +252,9 @@ export default {
             if (i == '0') {
 
               // this.dateArr = []
-              this.onlineArr = [1, 0, 0, 0, 0, 0, 0]
-              this.offlineArr = [0, 0, 2, 0, 0, 0, 0]
-              this.lowArr = [0, 2, 0, 0, 0, 0, 0]
+              this.onlineArr = [0, 0, 0, 0, 0, 0, 0]
+              this.offlineArr = [0, 0, 0, 0, 0, 0, 0]
+              this.lowArr = [0, 0, 0, 0, 0, 0, 0]
               this.faultArr = [0, 0, 0, 0, 0, 0, 0]
               this.warnArr = [0, 0, 0, 0, 0, 0, 0]
             } else {
