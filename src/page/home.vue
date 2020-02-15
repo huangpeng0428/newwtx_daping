@@ -23,11 +23,13 @@
         class="header-data flex vertical f-evenly">
         <div
           class="pointer"
-          @click="playAudio">
+        >
           <p>火险等级</p>
           <p class="level">一级</p>
         </div>
-        <div class="pointer">
+        <div
+          class="pointer"
+        >
           <p>设备通讯统计</p>
           <p><span class="number">{{ communicationNum }}</span>次</p>
         </div>
@@ -175,10 +177,15 @@ export default {
     mouseEvent(flag) {
       this.isshowWarn = flag
     },
-    playAudio() {
+    playAudio(action) {
       let buttonAudio = document.getElementById('eventAudio');
       buttonAudio.setAttribute('src', this.audioSrc)
-      buttonAudio.play()
+      if (action == 'play') {
+        buttonAudio.play()
+      } else {
+        buttonAudio.pause()
+      }
+
     },
     async getFacilityCommunication() {
       try {
@@ -229,7 +236,7 @@ export default {
         // let websocketData = this.websocketData.list[0]
         // websocket接收信息
         this.isWebsocket = true
-        this.playAudio()
+        this.playAudio('play')
         let websocketData = JSON.parse(event.data).list[0]
         this.websocketData = websocketData
         console.log(this.websocketData)
@@ -250,9 +257,8 @@ export default {
                   case '1':
                     element.val = '智能气感'
                     break;
-                  case 2:
-                  case 5:
-                    console.log(1111)
+                  case '2':
+                  case '5':
                     element.val = '液压液位检测'
                     break;
                   case '3':
@@ -306,7 +312,6 @@ export default {
         //   timestamp: new Date().getTime(),
         //   fTime: '2020-02-13 02:13:32'
         // }
-        console.log(params)
 
         try {
           let res = await this.$http.post('/realTimeAlarm/confirmAlarm.do', params)
@@ -314,6 +319,7 @@ export default {
           if (res.state == '0') {
             alert(message)
             this.isWebsocket = false
+            this.playAudio('pause')
           }
         } catch (error) {
         }
@@ -360,6 +366,7 @@ export default {
       color: #AACDDA;
       font-size: 1rem;
       position: relative;
+      height: 5rem;
       .level{
         color: #06F0B8;
         font-size: 2.25rem;

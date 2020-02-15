@@ -157,6 +157,31 @@
               :key="index"
               class="solt-item">{{ item.title }}：{{ item.value }}</div>
           </div>
+          <div
+            v-show="showVideo"
+            class="video-cont">
+            <video
+              id="video"
+              controls
+              poster
+              playsInline
+              webkit-playsinline
+              autoplay>
+              <source
+                :src="adress"
+                class="AVURL"
+                type="application/x-mpegURL">
+              <source
+                :src="adress1"
+                class="AVURL"
+                type="">
+            </video>
+            <img
+              style="position: absolute;
+              right: -.5rem;
+              top: -.5rem;"
+              src="../assets/image/close.png" >
+          </div>
         </info-data>
       </div>
     </div>
@@ -186,6 +211,9 @@ export default {
     },
     data() {
       return {
+        adress: '',
+        adress1: '',
+        showVideo: false,
         showMask: false,
         isShowInfo: false,
         isShowList: false,
@@ -337,6 +365,10 @@ export default {
                 {'title': '安装位置', 'value': res[0].facilitySecondPosition || '无'}
                 ]
               }
+              console.log(res[0])
+              this.adress = res[0].fLiveAddress
+              this.adress1 = res[0].fRtmp
+              console.log(this.adress, this.adress1)
             } catch (error) {
             }
         }
@@ -349,7 +381,12 @@ export default {
         this.isShowInfo = false
       },
       playVideo() {
-        alert('功能正在加紧完善中...')
+        // eslint-disable-next-line no-undef
+        let yplayz = new EZUIPlayer('video');
+        console.log(yplayz)
+        this.showVideo = true
+
+        // alert('功能正在加紧完善中...')
       }
     }
 }
@@ -525,6 +562,18 @@ export default {
           .solt-item{
             margin-bottom:1rem;
           }
+        }
+      }
+      .video-cont{
+        width: 35rem;
+          height: 25rem;
+          position: absolute;
+          top: .6rem;
+          left: 29rem;
+          background: #091651;
+        video{
+          width:100%;
+          height:100%;
         }
       }
     }

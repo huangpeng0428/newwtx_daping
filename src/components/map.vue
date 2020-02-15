@@ -99,7 +99,8 @@ export default {
       // this.addMarkers()
     },
     addMarkers() {
-      console.log(this.styleObject)
+
+      // console.log(this.styleObject)
       this.mass = new AMap.MassMarks(this.data_info, {
         zIndex: 999,
         cursor: 'pointer',

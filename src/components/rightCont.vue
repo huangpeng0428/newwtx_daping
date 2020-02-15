@@ -199,18 +199,45 @@ export default {
     watch: {
       'infoTopObj': {
         handler(val) {
+          console.log('11', val)
           Object.keys(val).forEach(e => {
             this.infoTop.infoArr.forEach(element => {
               if (element.key == e) {
                 if (element.key == 'placeAddress') {
                   element.val = `${val[e]}${val['facilitySecondPosition']}`
                 } else if (element.key == 'facilityType') {
-                  if (val[e] == 0) {
-                    element.val = '烟感告警'
+                  switch (val[e]) {
+                    case '0':
+                      element.val = '烟感告警'
+                      break;
+                    case '1':
+                      element.val = '气感告警'
+                      break;
+                    case '3':
+                      element.val = '电感告警'
+                      break;
+                    case '5':
+                    case '6':
+                      element.val = '液位液压报警'
+                      break;
+                    case '4':
+                      element.val = '视频监控报警'
+                      break;
+                    case '7':
+                      element.val = '消防栓报警'
+                      break;
+                    default:
+                      break;
                   }
                 } else if (element.key == 'fConfirmState') {
-                  if (val[e] == 4) {
-                    element.val = '未恢复'
+                  if (val[e] == '0') {
+                    element.val = '未确认'
+                  }
+                  if (val[e] == '1') {
+                    element.val = '确认为火情'
+                  }
+                  if (val[e] == '2') {
+                    element.val = '确认为预警'
                   }
                 } else {
                   element.val = val[e]
