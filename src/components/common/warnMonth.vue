@@ -79,6 +79,19 @@
               class="tex-overflow"
               v-text="item.fConfirmState == '0' || item.fConfirmState == '1'? '(未完成)': item.fOperationTime"/>
           </div>
+          <div
+            v-if="isConfirm"
+            class="btn-list">
+            <div
+              class="confirm-btn btn-style pointer"
+              @click="confirmBtn('confirme', item)">确认为预警</div>
+            <div
+              class="fire-btn btn-style pointer"
+              @click="confirmBtn('fire', item)">确认为火警</div>
+            <div
+              class="cancel-btn btn-style pointer"
+              @click="confirmBtn('cancel', item)">取消</div>
+          </div>
         </div>
       </div>
     </div>
@@ -86,6 +99,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
     props: {
         taskList: {
@@ -97,10 +111,14 @@ export default {
     },
     data() {
         return {
+          isConfirm: false
 
         //    taskList: []
         }
     },
+    computed: {
+    ...mapState('userInfo', ['loginCookie'])
+  },
     watch: {
       taskList: {
         handler(val) {
@@ -172,13 +190,52 @@ export default {
         }
     },
     mounted() {
+
     },
     methods: {
         hiddenWarn() {
             this.$emit('hiddenWarn')
         },
-        clickResult() {
-            console.log(11)
+        clickResult(str) {
+            if (str == '未确认') {
+                this.isConfirm = true
+            }
+        },
+        async confirmBtn(str, obj) {
+            let confirmStr = str == 'confirme' ? '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。' : '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。'
+            let state = str == 'confirme' ? '2' : '1'
+            if (confirm(confirmStr) == true) {
+            let params = {
+                facilityID: obj.facilityId,
+                type: obj.facilityType,
+                logID: obj.logId,
+                userId: this.loginCookie,
+                state: state,
+                tableType: obj.tableType,
+                timestamp: new Date().getTime(),
+                fTime: obj.alarmTime
+            }
+
+                // let params = {
+                //   facilityID: '321',
+                //   type: '0',
+                //   logID: '1525704622567',
+                //   userId: this.loginCookie,
+                //   state: str,
+                //   tableType: '',
+                //   timestamp: new Date().getTime(),
+                //   fTime: '2020-02-13 02:13:32'
+                // }
+
+                try {
+                let res = await this.$http.post('/realTimeAlarm/confirmAlarm.do', params)
+                console.log(res)
+                if (res.state == '0') {
+
+                }
+                } catch (error) {
+                }
+            }
         }
     }
 }
@@ -205,6 +262,7 @@ export default {
         .warnMonth-item{
             padding: 1rem 0;
             border-bottom:1px solid #3E72D1;
+            position: relative;
             .padb{
                 padding-bottom:.5rem;
             }
@@ -215,6 +273,7 @@ export default {
                 background: #b56a08;
                 font-size: 1rem;
                 margin-right:2rem;
+                line-height: 2rem;
             }
             .warnMonth-item-rqtype{
                 width: 15rem;
@@ -224,6 +283,38 @@ export default {
                 text-align: center;
                 // display: inline-block;
                 // line-height: 2.5rem;
+            }
+            .btn-list{
+                position: absolute;
+                top: 7rem;
+                right: 0rem;
+                width: 10rem;
+                height: 11rem;
+                background: #0C1738;
+                border: 1px solid #205799;
+                border-radius: .5rem;
+                .btn-style{
+                    width: 7rem;
+                    height: 2.5rem;
+                    line-height: 2.5rem;
+                    border-radius: 1rem;
+                    margin: 0 auto;
+                    margin-top: 1rem;
+                    opacity: 0.9;
+                }
+                .btn-style:hover {
+                    opacity: 1;
+                }
+                .confirm-btn{
+                    background: #E8901E;
+                }
+                .fire-btn{
+                    background: #FF1761;
+                }
+                .cancel-btn{
+                    background: #ccc;
+                    color: #FF1761;
+                }
             }
         }
     }

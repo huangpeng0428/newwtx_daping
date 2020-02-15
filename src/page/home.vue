@@ -217,6 +217,7 @@ export default {
       // Bus.$emit('changeIcon')
     },
     initWebsocket() {
+      console.log(111)
       if ('WebSocket' in window) {
 
       this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
@@ -229,6 +230,15 @@ export default {
 
       this.websocket.onopen = () => {
         console.log('连接成功，当前时间' + new Date());
+      };
+
+      this.websocket.onclose = () => {
+        console.log('连接断开');
+
+        setTimeout(() => {
+          this.initWebsocket();
+          console.log('正在重连，当前时间' + new Date());
+        }, 5000);
       };
 
       this.websocket.onmessage = (event) => {
@@ -320,6 +330,8 @@ export default {
             alert(message)
             this.isWebsocket = false
             this.playAudio('pause')
+          } else {
+            alert(res.message)
           }
         } catch (error) {
         }

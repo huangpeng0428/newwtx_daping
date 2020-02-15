@@ -199,7 +199,6 @@ export default {
     watch: {
       'infoTopObj': {
         handler(val) {
-          console.log('11', val)
           Object.keys(val).forEach(e => {
             this.infoTop.infoArr.forEach(element => {
               if (element.key == e) {
