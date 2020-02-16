@@ -25,7 +25,7 @@
           class="pointer"
         >
           <p>火险等级</p>
-          <p class="level">一级</p>
+          <p class="level">{{ level }}</p>
         </div>
         <div
           class="pointer"
@@ -67,6 +67,7 @@
       <div class="left between-cont">
         <left-cont
           :is-websocket="isWebsocket"
+          :weather-obj="weatherObj"
           @historyallAountMonth="historyallAountMonth"/>
       </div>
       <div class="centerClass">
@@ -135,7 +136,9 @@ export default {
         DM: '',
         listpoint: [],
         leval: 6
-      }
+      },
+      weatherObj: {},
+      level: '一级'
     }
   },
   computed: {
@@ -155,11 +158,39 @@ export default {
   mounted() {
     this.initData()
     this.initWebsocket()
+    this.getweather()
   },
   methods: {
+    async getweather() {
+      let params = {
+        useMd5: false
+      }
+      try {
+        let res = await this.$http.get('https://free-api.heweather.net/s6/weather/now?location=萧山区&key=115f613585404c93af86677da09e7ab4', params)
+        this.weatherObj = res.HeWeather6[0].now;
+        console.log(this.weatherObj)
+        if (this.weatherObj.tmp <= -3) {
+          this.level = '一级'
+        }
+        if (this.weatherObj.tmp <= 5 && this.weatherObj.tmp > -3) {
+          this.level = '二级'
+        }
+        if (this.weatherObj.tmp <= 10 && this.weatherObj.tmp > 5) {
+          this.level = '三级'
+        }
+        if (this.weatherObj.tmp <= 25 && this.weatherObj.tmp > 10) {
+          this.level = '四级'
+        }
+        if (this.weatherObj.tmp > 25) {
+          this.level = '五级'
+        }
+      } catch (error) {
+      }
+    },
     async getTaskList() {
       let params = this.params
       params['page'] = 1
+      console.log(params)
       try {
         let res = await this.$http.post('/facilityInfo/countFacilityWarningTaskTo30DaysGZ.do', params)
         this.taskList = res
@@ -219,9 +250,9 @@ export default {
     initWebsocket() {
       if ('WebSocket' in window) {
 
-      this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
+      // this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
       // this.websocket = new WebSocket('ws://120.26.215.34:8080/IntelligentFire/websocket'); // 正式
-      // this.websocket = new WebSocket('ws://121.36.15.94:8080/IntelligentFire/websocket');
+      this.websocket = new WebSocket('ws://121.36.15.94:8282/IntelligentFire/websocket');
 
       } else {
         alert('当前浏览器 Not support websocket');

@@ -4,18 +4,18 @@
       <div class="weath-cont flex f-between vertical">
         <img src="../assets/image/weather.png">
         <div>
-          <p>多云转晴</p>
-          <p style="color:#0DC1FF;font-size:1.41rem;">28℃-33℃</p>
+          <p>{{ weatherObj.cond_txt }}</p>
+          <p style="color:#0DC1FF;font-size:1.41rem;">{{ weatherObj.tmp }} ℃</p>
         </div>
         <div class="day">
-          <p style="font-size:1.75rem;">周五12:35</p>
-          <p>2020年02月10日</p>
+          <p style="font-size:1.75rem;">{{ week }}{{ nowTime }}</p>
+          <p>{{ nowYear }}</p>
         </div>
       </div>
       <div class="number-cont flex f-evenly vertical">
         <div>
-          <p>质量</p>
-          <p>80%</p>
+          <p>空气质量</p>
+          <p>良好</p>
         </div>
         <div>
           <p>PM2.5</p>
@@ -23,7 +23,7 @@
         </div>
         <div>
           <p>湿度</p>
-          <p>80%</p>
+          <p>{{ weatherObj.hum }}%</p>
         </div>
       </div>
     </div>
@@ -207,6 +207,12 @@ export default {
         default() {
           return false
         }
+      },
+      weatherObj: {
+        type: Object,
+        default() {
+          return {}
+        }
       }
     },
     data() {
@@ -243,7 +249,11 @@ export default {
           height: '0.5rem'
         },
         facilityInfo: {info: []},
-        type: 0
+        type: 0,
+        nowYear: '',
+        nowTime: '',
+        weeks: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+        week: ''
       }
     },
     computed: {
@@ -276,8 +286,16 @@ export default {
       Bus.$on('clickShowInfo', (data) => {
         this.showInfo('isShowInfo', true, data)
       })
+      this.getNowTime()
     },
     methods: {
+      getNowTime() {
+        let now = new Date()
+        let day = now.getDay();
+        this.nowYear = util.formatTime(now.getTime(), 'Y年M月D日')
+        this.nowTime = util.formatTime(now.getTime(), 'h:m')
+        this.week = this.weeks[day]
+      },
       async getcountFacility() {
         let allAount = 0
         let isFlag = true
