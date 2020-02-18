@@ -28,7 +28,7 @@ export default {
             type: Object,
             default() {
                 return {
-                    width: '10rem',
+                    width: '9rem',
                     height: '0.88rem'
                 }
             }
@@ -70,7 +70,7 @@ export default {
         }
         .status-item-right{
           font-size: 0.87rem;
-          width:12rem;
+          width:15rem;
           .cilcle{
             width: 0.88rem;
             height: 0.88rem;

@@ -17,6 +17,7 @@ const axios = Axios.create({
 // 请求前拦截
 axios.interceptors.request.use(
   config => {
+
     if (config.data) {
       config.data['timestamp'] = new Date().getTime()
 
@@ -24,6 +25,7 @@ axios.interceptors.request.use(
     // console.log(Vue.prototype.$cookies.get('loginId_cookie'));
     config.data['sign'] = util.MD5(`${util.ObjectToString(util.objKeySort(config.data))}&key=3ux94uu9y5SoihjK1BLxZbTOn5dpTAEc`)
     config.data = Qs.stringify(config.data);
+
     }
 
     return config;

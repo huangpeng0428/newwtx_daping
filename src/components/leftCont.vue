@@ -295,6 +295,13 @@ export default {
         this.nowYear = util.formatTime(now.getTime(), 'Y年M月D日')
         this.nowTime = util.formatTime(now.getTime(), 'h:m')
         this.week = this.weeks[day]
+        setInterval(() => {
+          let now = new Date()
+          let day = now.getDay();
+          this.nowYear = util.formatTime(now.getTime(), 'Y年M月D日')
+          this.nowTime = util.formatTime(now.getTime(), 'h:m')
+          this.week = this.weeks[day]
+        }, 60000);
       },
       async getcountFacility() {
         let allAount = 0
@@ -337,7 +344,8 @@ export default {
             c.forEach(element => {
               if (element.type == e) {
                 element.count = res[e]
-                element.accountNum = `${Math.floor((res[e] / allAount) * 100)}%`
+                let str = res[e] / allAount + ''
+                element.accountNum = str.indexOf('.') == -1 ? `${((res[e] / allAount * 100))}%` : `${((res[e] / allAount * 100).toFixed(2))}%`
               }
             });
             return c
@@ -383,7 +391,6 @@ export default {
                 {'title': '安装位置', 'value': res[0].facilitySecondPosition || '无'}
                 ]
               }
-              console.log(res[0])
               this.adress = res[0].fLiveAddress
               this.adress1 = res[0].fRtmp
               console.log(this.adress, this.adress1)

@@ -66,6 +66,7 @@
         <item-data
           v-if="showCount"
           :state-data="stateData"
+          :item-style="itemStyle"
           style="color:#fff"/>
         <img
           v-if="!showCount"
@@ -115,6 +116,7 @@ export default {
               {title: '故障', type: 'fault', count: '', accountNum: '', color: '#05DBB0'},
               {title: '告警', type: 'warn', count: '', accountNum: '', color: '#BE4596'}
             ],
+            itemStyle: {width: '6rem', height: '0.88rem'},
             type: 0,
             showCount: false
         }
@@ -207,7 +209,8 @@ export default {
             });
             this.adressList.forEach(item => {
               let num = util.random(0, 4);
-              item['percent'] = `${Math.floor((item.countFid / countAll) * 100)}%`
+              let str = item.countFid / countAll + ''
+              item['percent'] = str.indexOf('.') == -1 ? `${((item.countFid / countAll * 100))}%` : `${((item.countFid / countAll * 100).toFixed(2))}%`
               item['bg_color'] = color[num] || '#3f51c0'
             });
           } catch (error) {
@@ -224,8 +227,9 @@ export default {
               c.forEach(element => {
                 if (element.type == e) {
                   element.count = res[e]
+                  let str = res[e] / allAount + ''
                   if (allAount) {
-                    element.accountNum = `${Math.floor((res[e] / allAount) * 100)}%`
+                    element.accountNum = str.indexOf('.') == -1 ? `${((res[e] / allAount * 100))}%` : `${((res[e] / allAount * 100).toFixed(2))}%`
                   } else {
                     element.accountNum = '0%'
                   }
@@ -348,7 +352,7 @@ export default {
                     .region-right{
                         // flex: 1;
                         .region-block{
-                            width: 8rem;
+                            width: 6rem;
                             height: 0.88rem;
                             border-radius: .5rem;
                             background:#0F3270;
