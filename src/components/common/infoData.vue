@@ -50,9 +50,24 @@
             </div>
             <div
               v-if="item.showHead"
-              class="item-right pointer">
+              class="item-right pointer"
+              @click="hiddenmanage( showManage = true)">
               负责人
             </div>
+          </div>
+          <div
+            v-if="showManage"
+            class="abl manageInfo">
+            <div class="manage-common">
+              负责人：{{ dataConfig.homeManageInfo.homeManager }}
+            </div>
+            <div class="manage-common">
+              电话：{{ dataConfig.homeManageInfo.homeManagerPhone }}
+            </div>
+            <img
+              class="pointer manage-close"
+              src="../../assets/image/close.png"
+              @click="hiddenmanage( showManage = false)" >
           </div>
         </div>
         <div v-else>
@@ -79,7 +94,7 @@ export default {
     },
     data() {
       return {
-
+        showManage: false
       }
     },
     computed: {
@@ -95,6 +110,9 @@ export default {
       },
       getNext(flag) {
         this.$emit('getNext', flag)
+      },
+      hiddenmanage() {
+
       }
     }
 }
@@ -108,6 +126,7 @@ export default {
         background-repeat: no-repeat;
         background-size: 100% 100%;
         margin: 0.69rem 0;
+        position: relative;
         .right-top-title{
             padding: 1.3rem;
         }
@@ -133,6 +152,24 @@ export default {
                 line-height: 1.88rem;
             }
 
+        }
+        .manageInfo{
+          width: 14rem;
+          height: 7rem;
+          background-image: -webkit-gradient(linear, left top, left bottom, from(#07265d), to(#07265d)),-webkit-gradient(linear, left top, left bottom, from(#2d323b), to(#2d323b));
+          background-image: linear-gradient(#07265d, #07265d),linear-gradient(#2d323b, #2d323b);
+          z-index: 111;
+          text-align: left;
+          top: 5rem;
+          right: 29.5rem;
+        }
+        .manage-common{
+          padding: 1rem 1rem 0 1rem;
+        }
+        .manage-close{
+          position: absolute;
+          top: 0;
+          right: 0;
         }
         .adress-right{
             width: 11.69rem;

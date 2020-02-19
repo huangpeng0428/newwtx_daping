@@ -124,7 +124,7 @@ export default {
       communicationNum: 0,
       allAountMonth: 0,
       websocket: null,
-      infoTop: {title: '告警信息', haveInfo: true, showNext: true, warnAdress: '', homeManager: '', infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}]},
+      infoTop: {title: '告警信息', haveInfo: true, showNext: true, warnAdress: '', homeManager: '', homeManagerPhone: '', infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}]},
       imgArr: [''],
       audioSrc: require('../assets/audio/True_and_false.mp3'),
       websocketData: {},
@@ -190,7 +190,6 @@ export default {
     async getTaskList() {
       let params = this.params
       params['page'] = 1
-      console.log(params)
       try {
         let res = await this.$http.post('/facilityInfo/countFacilityWarningTaskTo30DaysGZ.do', params)
         this.taskList = res
@@ -287,6 +286,7 @@ export default {
         Bus.$emit('initialmap', this.eventObj)
         this.infoTop.warnAdress = websocketData.areaName
         this.infoTop.homeManager = websocketData.homeManager
+        this.infoTop.homeManagerPhone = websocketData.homeManagerPhone
         Object.keys(websocketData).forEach(e => {
           this.infoTop.infoArr.forEach(element => {
             if (element.key == e) {

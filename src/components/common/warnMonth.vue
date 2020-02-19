@@ -78,7 +78,7 @@
             <div
               style="width:18.5rem;text-align: left;"
               class="tex-overflow"
-              v-text="item.fConfirmState == '0' || item.fConfirmState == '1'? '(未完成)': item.fOperationTime"/>
+              v-text="item.fConfirmState == '0' ? '(未完成)': item.fOperationTime"/>
           </div>
           <div
             v-if="confirmIndex == index && isConfirm"

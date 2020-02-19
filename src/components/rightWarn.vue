@@ -72,6 +72,10 @@
         <div class>负责人</div>
         <div class="home-manage">{{ dataConfig.homeManager }}</div>
       </div>
+      <div class="item-right-warn manager-phone flex f-between">
+        <div class>负责人电话</div>
+        <div class="home-manage">{{ dataConfig.homeManagerPhone }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -111,7 +115,7 @@ export default {
     color: #D5FDFD;
     margin-top: 2.5rem;
     .right-img{
-        height: 30.03rem;
+        height: 33.03rem;
         width: 28.75rem;
         background: url('../assets/image/rightImg.png');
         background-repeat: no-repeat;
@@ -187,6 +191,9 @@ export default {
                 color: #fff;
                 font-size:1.55rem;
             }
+        }
+        .manager-phone{
+            margin-top: 1rem;
         }
         .adress-right{
             width: 11.69rem;

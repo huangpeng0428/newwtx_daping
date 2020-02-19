@@ -178,7 +178,8 @@ export default {
         },
         infoTopObj: {},
         infoTopIndex: 0,
-        infoTop: {title: '近期告警任务', haveInfo: true, showNext: true, showClose: false, showsolt: false, infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '设备位置：', key: 'placeAddress', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '任务状态：', key: 'fConfirmState', val: '无', showColor: true, showHead: false, showtitle: true}]},
+        homeManageInfo: {},
+        infoTop: {title: '近期告警任务', homeManageInfo: this.homeManageInfo, haveInfo: true, showNext: true, showClose: false, showsolt: false, infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '设备位置：', key: 'placeAddress', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '任务状态：', key: 'fConfirmState', val: '无', showColor: true, showHead: false, showtitle: true}]},
         infoBottom: {title: '相关负责人信息', haveInfo: false, showNext: false, showClose: false, showsolt: false, infoArr: [{title: '', key: 'fAreaName', val: '无', showColor: true, showHead: false, showtitle: false}, {title: '法人：', key: 'fVillagePrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '法人电话：', key: 'fVillagePhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人：', key: 'fAreaPrincipal', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '紧急联系人电话：', key: 'fAreaPhone', val: '无', showColor: false, showHead: false, showtitle: true}, {title: '地址：', key: 'fAreaAddress', val: '无', showColor: false, showHead: false, showtitle: true}]},
         WarningTaskList: [],
         placeSelected: '1',
@@ -199,6 +200,11 @@ export default {
     watch: {
       'infoTopObj': {
         handler(val) {
+          this.homeManageInfo = {
+            homeManager: val.homeManager,
+            homeManagerPhone: val.homeManagerPhone
+          }
+          this.infoTop.homeManageInfo = this.homeManageInfo
           Object.keys(val).forEach(e => {
             this.infoTop.infoArr.forEach(element => {
               if (element.key == e) {

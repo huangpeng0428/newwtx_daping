@@ -5,6 +5,7 @@ export default {
 
     // HTTPURL: 'http://121.36.247.51:8282/IntelligentFire/'
 
-    // HTTPURL: 'http://121.36.15.94:8282/IntelligentFire'
-    HTTPURL: 'http://112.17.83.178:8888/IntelligentFire'
+    HTTPURL: 'http://121.36.15.94:8282/IntelligentFire'
+
+    // HTTPURL: 'http://112.17.83.178:8888/IntelligentFire'
 }
