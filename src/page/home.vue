@@ -92,6 +92,7 @@
       v-show="showWarn"
       :task-list="taskList"
       class="warn-month"
+      @getTaskList="getTaskList"
       @hiddenWarn="hiddenWarn"
     />
   </div>

@@ -142,6 +142,7 @@ export default {
                 height: 1.88rem;
                 line-height: 1.88rem;
                 border-radius:2rem;
+                color: #394e8a;
             }
             .warn-location{
                 width:18rem;

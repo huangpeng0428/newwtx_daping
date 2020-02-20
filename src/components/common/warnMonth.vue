@@ -57,7 +57,13 @@
             <p>联系人：</p>
             <div
               style="width:20.5rem;text-align: left;"
-              class="tex-overflow">{{ item.placePrincipal }}{{ item.placePrincipalPhone }}</div>
+              class="tex-overflow">{{ item.placePrincipal }}</div>
+          </div>
+          <div class="padb flex">
+            <p>联系人电话：</p>
+            <div
+              style="width:20.5rem;text-align: left;"
+              class="tex-overflow">{{ item.placePrincipalPhone }}</div>
           </div>
           <div class="padb flex">
             <p>处理人：</p>
@@ -242,6 +248,7 @@ export default {
                   alert(message)
                   this.isConfirm = false
                   this.$refs.confirmState[i].innerHTML = '已完成';
+                  this.$emit('getTaskList')
 
                   // document.getElementByClassName('confirmState').innerHTML = '已完成';
                 } else {
