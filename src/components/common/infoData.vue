@@ -120,7 +120,7 @@ export default {
 <style lang="scss">
 .infoData{
     .right-img{
-        height: 24.63rem;
+        min-height: 24.63rem;
         width: 28.75rem;
         background: url('../../assets/image/rightImg.png');
         background-repeat: no-repeat;

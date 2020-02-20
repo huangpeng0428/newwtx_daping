@@ -156,7 +156,7 @@ export default {
                     e['imgUrl'] = require('../../assets/image/type_smoke.png')
                     e['text'] = '烟感告警'
                 }
-                if (e.reason == 1) {
+                if (e.reason == 1 || !e.reason) {
                     switch (e.fConfirmState) {
                         case '0':
                             e['Result'] = '未确认'
@@ -184,9 +184,9 @@ export default {
                     }
                 }
 
-                if (!e.reason) {
-                    e['Result'] = '已完成'
-                }
+                // if (!e.reason) {
+                //     e['Result'] = '已完成'
+                // }
             })
             }
         }

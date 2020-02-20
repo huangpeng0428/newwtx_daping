@@ -59,7 +59,7 @@
             class="item pointer flex f-between vertical "
             @mouseenter="mouseEvent(true)"
             @mouseleave="mouseEvent(false)"
-            @click="showInfo('isShowList', true, item)">
+            @click="showInfo('isShowList', true, item, index)">
             <div class="flex">
               <img
                 :src="item.icon"
@@ -156,6 +156,62 @@
               v-for="(item,index) in facilityInfo.info"
               :key="index"
               class="solt-item">{{ item.title }}：{{ item.value }}</div>
+            <div v-if="type == 0 || type == 1">
+              <div class="solt-item">
+                心跳信息: <span v-text="dataInfo.xtTime ? dataInfo.xtTime: '无'"/>
+              </div>
+              <div class="solt-item">
+                利用率: <span v-text="dataInfo.LinkUtilization ? dataInfo.LinkUtilization: '无'"/>
+              </div>
+              <div class="solt-item">
+                物理小区标示: <span v-text="dataInfo.pci ? dataInfo.pci: '无'"/>
+              </div>
+              <div class="solt-item">
+                传感器级别: <span v-text="dataInfo.sinr ? dataInfo.sinr: '无'"/>
+              </div>
+              <div class="solt-item">
+                网络承载: <span v-text="dataInfo.rspr ? dataInfo.rspr: '无'"/>
+              </div>
+              <div class="solt-item">
+                链接质量: <span v-text="dataInfo.ecl ? dataInfo.ecl: '无'"/>
+              </div>
+            </div>
+            <div v-if="type == 3">
+              <div class="solt-item">
+                漏电流: <span v-text="dataInfo.L ? dataInfo.L: '0' + '(<500mA为正常)'"/>
+              </div>
+              <div class="solt-item">
+                电流A: <span v-text="dataInfo.CA ? dataInfo.CA: '0'"/>
+              </div>
+              <div class="solt-item">
+                电流B: <span v-text="dataInfo.CB ? dataInfo.CB: '0'"/>
+              </div>
+              <div class="solt-item">
+                电流C: <span v-text="dataInfo.CC ? dataInfo.CC: '0'"/>
+              </div>
+              <div class="solt-item">
+                温度A: <span v-text="dataInfo.T1 ? dataInfo.T1: '0'"/>
+              </div>
+              <div class="solt-item">
+                温度B: <span v-text="dataInfo.T2 ? dataInfo.T2: '0'"/>
+              </div>
+              <div class="solt-item">
+                温度C: <span v-text="dataInfo.T3 ? dataInfo.T3: '0'"/>
+              </div>
+              <div class="solt-item">
+                温度D: <span v-text="dataInfo.T4 ? dataInfo.T4: '0'"/>
+              </div>
+            </div>
+            <div v-if="type == 7">
+              <div class="solt-item">
+                液压: <span v-text="dataInfo.fWaterPressure ? dataInfo.fWaterPressure: '0' + '(>0.07Mpa为正常)'"/>
+              </div>
+            </div>
+            <div v-if="type == 6 || type == 2">
+              <div class="solt-item">
+                液压: <span v-text="dataInfo.unitvalues ? dataInfo.unitvalues: '0' + '(>0.06Mpa为正常)'"/>
+              </div>
+            </div>
           </div>
           <div
             v-show="showVideo"
@@ -249,11 +305,13 @@ export default {
           height: '0.5rem'
         },
         facilityInfo: {info: []},
+        dataInfo: {},
         type: 0,
         nowYear: '',
         nowTime: '',
         weeks: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
-        week: ''
+        week: '',
+        fType: 0
       }
     },
     computed: {
@@ -357,16 +415,17 @@ export default {
 
         // this.showMask = showMask
       },
-      async showInfo(res, flat, data) {
+      async showInfo(res, flat, data, i) {
         if (res == 'isShowList') {
           if (flat) {
             if (data) {
-              console.log(data)
+              if (i == 3) return
               let params = JSON.parse(JSON.stringify(this.params))
               let sum = 0
               if (data.ftype == 0) params['sum'] = sum
               params['type'] = data.ftype
               this.type = data.ftype
+              console.log(this.type)
               try {
                 let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
                 this.listByType = res
@@ -381,6 +440,7 @@ export default {
                 facilityinfoId: data.facilityinfoId
               }
               let res = await this.$http.post('/facilityInfo/queryFacilityInfo.do', params)
+              this.dataInfo = res[0]
               this.facilityInfo = {state: res[0].isOnline,
               info: [
                 {'title': '告警时间', 'value': res[0].fTime ? util.formatTime(res[0].fTime, 'Y/M/D h:m:s') : '无'},

@@ -255,12 +255,56 @@ export default {
             this.titleArr = i == '0' ? ['烟', '电', '气', '视频', '水'] : ['在线', '离线', '低电压', '故障', '告警']
             if (i == '0') {
 
-              // this.dateArr = []
+              let beforeday = [util.getBeforeDate(1), util.getBeforeDate(2), util.getBeforeDate(3), util.getBeforeDate(4), util.getBeforeDate(5), util.getBeforeDate(6), util.getBeforeDate(7)]
               this.onlineArr = [0, 0, 0, 0, 0, 0, 0]
               this.offlineArr = [0, 0, 0, 0, 0, 0, 0]
               this.lowArr = [0, 0, 0, 0, 0, 0, 0]
               this.faultArr = [0, 0, 0, 0, 0, 0, 0]
               this.warnArr = [0, 0, 0, 0, 0, 0, 0]
+              for (let i = 0; i < res.length; i++) {
+                if (res[i].type == 0) {
+                  for (let j = 0; j < beforeday.length; j++) {
+                    if (beforeday[j] == res[i].createTime) {
+                      this.onlineArr[j] = res[i].countFid;
+                    }
+                  }
+                }
+                if (res[i].type == 3) {
+                  for (let j = 0; j < beforeday.length; j++) {
+                    if (beforeday[j] == res[i].createTime) {
+                      this.offlineArr[j] = res[i].countFid;
+                    }
+                  }
+                }
+                if (res[i].type == 1) {
+                  for (let j = 0; j < beforeday.length; j++) {
+                    if (beforeday[j] == res[i].createTime) {
+                      this.lowArr[j] = res[i].countFid;
+                    }
+                  }
+                }
+                if (res[i].type == 4) {
+                  for (let j = 0; j < beforeday.length; j++) {
+                    if (beforeday[j] == res[i].createTime) {
+                      this.faultArr[j] = res[i].countFid;
+                    }
+                  }
+                }
+                if (res[i].type == 5) {
+                  for (let j = 0; j < beforeday.length; j++) {
+                    if (beforeday[j] == res[i].createTime) {
+                      this.warnArr[j] += res[i].countFid;
+                    }
+                  }
+                }
+                if (res[i].type == 6) {
+                  for (let j = 0; j < beforeday.length; j++) {
+                    if (beforeday[j] == res[i].createTime) {
+                      this.warnArr[j] += res[i].countFid;
+                    }
+                  }
+                }
+              }
             } else {
               this.dateArr = [res[0].date.substr(5)]
               this.onlineArr = [res[0].online]
