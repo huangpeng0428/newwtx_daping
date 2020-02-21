@@ -4,7 +4,9 @@
     <img
       class="abl-img"
       src="../assets/image/map_bg.png">
-    <span class="map-title">数据屏监控</span>
+    <span
+      class="map-title"
+      @click="test">数据屏监控</span>
   </div>
 </template>
 <script>
@@ -21,7 +23,8 @@ export default {
       data_info: [],
       rightInfoBottom: {},
       marker: null,
-      icon: require('../assets/image/mark1.png')
+      icon: require('../assets/image/mark1.png'),
+      flag: true
     };
   },
   computed: {
@@ -61,16 +64,18 @@ export default {
       // console.log(DM, listpoint, leval)
 
       // this.initsiteMap(DM, listpoint, leval)
-      this.map.remove(this.marker)
 
-      // this.styleObject = [{
-      //   url: require('../assets/image/warn.png'),  // 图标地址
-      //   anchor: new AMap.Pixel(16, 16), // 图标显示位置偏移量，基准点为图标左上角
-      //   size: new AMap.Size(25, 25)    // 图标大小
-      // }];
-      // console.log(this.styleObject)
+      // this.map.remove(this.marker)
+      this.map.remove(this.mass)
 
-      // this.addMarkers()
+      this.styleObject = [{
+        url: require('../assets/image/warn.png'),  // 图标地址
+        anchor: new AMap.Pixel(16, 16), // 图标显示位置偏移量，基准点为图标左上角
+        size: new AMap.Size(25, 25)    // 图标大小
+      }];
+      console.log(this.styleObject)
+
+      this.addMarkers()
 
     })
 
@@ -78,6 +83,17 @@ export default {
   },
   methods: {
     ...mapActions('mapInfo', {'setrightInfoBottom': 'actionsrightInfoBottom'}),
+    test() {
+      this.map.remove(this.mass)
+      this.styleObject = [{
+        url: require('../assets/image/warn.png'),  // 图标地址
+        anchor: new AMap.Pixel(16, 16), // 图标显示位置偏移量，基准点为图标左上角
+        size: new AMap.Size(25, 25)    // 图标大小
+      }];
+      console.log(this.styleObject)
+
+      this.addMarkers()
+    },
     initMap(icon) {
       this.map = new AMap.Map('map-cont', {
         resizeEnable: true, // 是否监控地图容器尺寸变化
@@ -99,6 +115,7 @@ export default {
       // this.addMarkers()
     },
     addMarkers() {
+      console.log(1111)
 
       // console.log(this.styleObject)
       this.mass = new AMap.MassMarks(this.data_info, {
@@ -168,7 +185,10 @@ export default {
       }
     },
     async getmark({province, city, prefecture, areaName, placeName, placeId}) {
-      if (this.map) this.map.remove(this.mass)
+      if (this.map) {
+        console.log(2222)
+        this.map.remove(this.mass)
+      }
 
       // this.mass = null
 
@@ -209,7 +229,15 @@ export default {
         }
 
         // console.log(this.data_info)
-        this.addMarkers()
+        if (this.flag) {
+          this.flag = false
+          this.addMarkers()
+        }
+        setTimeout(() => {
+          this.flag = true
+        }, 1000);
+
+        // this.addMarkers()
       } catch (error) {
       }
     }

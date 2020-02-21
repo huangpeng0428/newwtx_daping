@@ -291,7 +291,7 @@ export default {
       'newNserAddress': {
         handler(newval, oldval) {
           if (newval.province != '' && newval.province != oldval.province) {
-
+            console.log(1)
             this.userAddress.city = ''
             this.userAddress.prefecture = ''
             this.userAddress.areaName = ''
@@ -302,10 +302,12 @@ export default {
             newval.city = ''
             newval.prefecture = ''
             newval.areaName = ''
+            newval.placeName = ''
 
             this.getAllCity()
           }
           if (newval.city != '' && newval.city != oldval.city) {
+            console.log(2)
             this.userAddress.prefecture = ''
             this.userAddress.areaName = ''
             this.userAddress.placeName = ''
@@ -315,6 +317,7 @@ export default {
             this.getAllPrefecture()
           }
           if (newval.prefecture != '' && newval.prefecture != oldval.prefecture) {
+            console.log(3)
             this.userAddress.areaName = ''
             this.userAddress.placeName = ''
             newval.areaName = ''
@@ -325,6 +328,7 @@ export default {
             this.getAllArea()
           }
           if (newval.areaName != '' && newval.areaName != oldval.areaName) {
+            console.log(4)
             this.userAddress.placeName = ''
 
             // this.userAddress.placeName = ''
@@ -340,7 +344,8 @@ export default {
 
           setTimeout(() => {
             newval['placeId'] = this.areaId
-            console.log('newval', newval)
+
+            // console.log('newval', newval)
 
             this.setadressInfo(newval)
             newval['userId'] = this.loginCookie

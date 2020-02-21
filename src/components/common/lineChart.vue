@@ -24,7 +24,6 @@ export default {
     },
     mounted() {
       this.$nextTick(() => {
-        console.log(this.chartData)
         setTimeout(() => {
           this.setcharts()
         }, 100)

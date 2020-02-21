@@ -63,10 +63,10 @@
       <div class="flex vertical">
         <div
           class="warn-btn pointer"
-          @click="confirmBtn('2')">确认为预警</div>
+          @click="showconfirmBtn('2')">确认为预警</div>
         <div
           class="warn-btn right pointer"
-          @click="confirmBtn('1')">确认为火情</div>
+          @click="showconfirmBtn('1')">确认为火情</div>
       </div>
       <div class="item-right-warn flex f-between">
         <div class>负责人</div>
@@ -75,6 +75,19 @@
       <div class="item-right-warn manager-phone flex f-between">
         <div class>负责人电话</div>
         <div class="home-manage">{{ dataConfig.homeManagerPhone }}</div>
+      </div>
+    </div>
+    <div
+      v-if="isconfirmBtn"
+      class="confirmBtn-mask">
+      <div style="margin-top: 2rem;">{{ desc }}</div>
+      <div class="btn-cont flex vertical">
+        <div
+          class="flex_1 cancel-btn pointer"
+          @click="isconfirmBtn = false">取消</div>
+        <div
+          class="flex_1 confirm-btn pointer"
+          @click="confirmBtn">确定</div>
       </div>
     </div>
   </div>
@@ -92,7 +105,9 @@ export default {
     },
     data() {
       return {
-
+          isconfirmBtn: false,
+          type: '',
+          desc: ''
       }
     },
     computed: {
@@ -104,8 +119,16 @@ export default {
       hiddenInfo() {
         this.$emit('hiddenInfo')
       },
-      confirmBtn(str) {
-          this.$emit('confirmBtn', str)
+      showconfirmBtn(str) {
+          this.type = str
+          this.desc = str == '1' ? '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。' : '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。'
+          this.isconfirmBtn = true
+
+        //   this.$emit('confirmBtn', str)
+      },
+      confirmBtn() {
+        this.$emit('confirmBtn', this.type)
+        this.isconfirmBtn = false
       }
     }
 }
@@ -207,6 +230,39 @@ export default {
         img{
             height: 1.25rem;
             width: 1.25rem;
+        }
+    }
+    .confirmBtn-mask{
+        width: 30rem;
+        min-height: 14rem;
+        background: url('../assets/image/left-bg-top.png');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        color: #fff;
+        position: absolute;
+        top: 11rem;
+        right: 29.5rem;
+        padding: 1rem;
+        .btn-cont{
+            height: 4rem;
+            margin-top:2.5rem;
+        }
+        .flex_1{
+            flex:1;
+            height: 100%;
+            line-height: 4rem;
+            border-radius: 1rem;
+            background: #3A6EFE;
+            margin: 1rem;
+            opacity: 0.8;
+            font-size: 1.4rem;
+        }
+        .flex_1:hover{
+            opacity: 1;
+        }
+        .cancel-btn{
+            background: #eee;
+            color: #000;
         }
     }
 }

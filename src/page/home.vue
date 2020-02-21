@@ -149,7 +149,6 @@ export default {
   watch: {
       adressInfo: {
         handler(val) {
-          console.log('val', val)
           val['userId'] = this.loginCookie
           this.params = util.getparams(val)
           this.getFacilityCommunication()
@@ -169,7 +168,6 @@ export default {
       try {
         let res = await this.$http.get('https://free-api.heweather.net/s6/weather/now?location=萧山区&key=115f613585404c93af86677da09e7ab4', params)
         this.weatherObj = res.HeWeather6[0].now;
-        console.log(this.weatherObj)
         if (this.weatherObj.tmp <= -3) {
           this.level = '一级'
         }
@@ -226,7 +224,6 @@ export default {
       }
     },
     historyallAountMonth(val) {
-      console.log('历史告警', val)
       this.allAountMonth = val
     },
     async initData() {
@@ -242,6 +239,7 @@ export default {
       // this.eventObj.DM = ''
       // this.eventObj.listpoint.push('116.83', '40.37')
       // this.eventObj.leval = 16
+
       // console.log('ssssss', this.eventObj)
       // Bus.$emit('initialmap', this.eventObj)
 
@@ -285,6 +283,7 @@ export default {
         this.eventObj.listpoint.push(this.websocketData.positionX, this.websocketData.positionY)
         this.eventObj.leval = 16
         Bus.$emit('initialmap', this.eventObj)
+        Bus.$emit('changeIcon')
         this.infoTop.warnAdress = websocketData.areaName
         this.infoTop.homeManager = websocketData.homeManager
         this.infoTop.homeManagerPhone = websocketData.homeManagerPhone
@@ -330,8 +329,6 @@ export default {
     },
     async confirmBtn(str) {
       let message = str == '1' ? '火情已确认' : '预警已确认'
-      let confirmStr = str == '1' ? '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。' : '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。'
-      if (confirm(confirmStr) == true) {
 
       let params = {
         facilityID: this.websocketData.facilityId,
@@ -367,7 +364,6 @@ export default {
           }
         } catch (error) {
         }
-      }
     }
   }
 };
