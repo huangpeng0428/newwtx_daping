@@ -362,6 +362,7 @@ export default {
       this.getAllProvince()
       Bus.$on('busGetWarningTask', () => {
         this.getWarningTask()
+        this.getAdress()
       })
 
       // this.getAllCity()

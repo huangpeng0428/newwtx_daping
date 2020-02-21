@@ -75,7 +75,6 @@
         <bottom-cont/>
       </div>
       <div class="right between-cont">
-
         <right-warn
           v-if="isWebsocket"
           :data-config="infoTop"
@@ -356,11 +355,18 @@ export default {
           let res = await this.$http.post('/realTimeAlarm/confirmAlarm.do', params)
           console.log(res)
           if (res.state == '0') {
-            alert(message)
+            this.$message({
+              message: message,
+              type: 'success'
+            });
             this.isWebsocket = false
             this.playAudio('pause')
+            Bus.$emit('busGetWarningTask')
           } else {
-            alert(res.message)
+            this.$message({
+              message: res.message,
+              type: 'error'
+            });
           }
         } catch (error) {
         }

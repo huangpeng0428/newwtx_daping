@@ -47,11 +47,17 @@ export default {
   },
   mounted() {
 
-    this.initMap(this.icon);
+    this.initMap();
     Bus.$on('initialmap', ({DM, listpoint, leval}) => {
 
       // console.log(DM, listpoint, leval)
-
+      this.map.remove(this.mass)
+      this.styleObject = [{
+        url: require('../assets/image/mark1.png'),  // 图标地址
+        anchor: new AMap.Pixel(25, 25), // 图标显示位置偏移量，基准点为图标左上角
+        size: new AMap.Size(50, 50)    // 图标大小
+      }];
+      this.addMarkers()
       this.initsiteMap(DM, listpoint, leval)
     })
 
@@ -73,7 +79,6 @@ export default {
         anchor: new AMap.Pixel(16, 16), // 图标显示位置偏移量，基准点为图标左上角
         size: new AMap.Size(25, 25)    // 图标大小
       }];
-      console.log(this.styleObject)
 
       this.addMarkers()
 
@@ -84,24 +89,25 @@ export default {
   methods: {
     ...mapActions('mapInfo', {'setrightInfoBottom': 'actionsrightInfoBottom'}),
     test() {
-      this.map.remove(this.mass)
-      this.styleObject = [{
-        url: require('../assets/image/warn.png'),  // 图标地址
-        anchor: new AMap.Pixel(16, 16), // 图标显示位置偏移量，基准点为图标左上角
-        size: new AMap.Size(25, 25)    // 图标大小
-      }];
-      console.log(this.styleObject)
 
-      this.addMarkers()
+      // this.map.remove(this.mass)
+      // this.styleObject = [{
+      //   url: require('../assets/image/warn.png'),  // 图标地址
+      //   anchor: new AMap.Pixel(16, 16), // 图标显示位置偏移量，基准点为图标左上角
+      //   size: new AMap.Size(25, 25)    // 图标大小
+      // }];
+      // console.log(this.styleObject)
+
+      // this.addMarkers()
     },
-    initMap(icon) {
+    initMap() {
       this.map = new AMap.Map('map-cont', {
         resizeEnable: true, // 是否监控地图容器尺寸变化
         mapStyle: 'amap://styles/darkblue'
       });
 
       this.styleObject = [{
-        url: icon,  // 图标地址
+        url: require('../assets/image/mark1.png'),  // 图标地址
         anchor: new AMap.Pixel(25, 25), // 图标显示位置偏移量，基准点为图标左上角
         size: new AMap.Size(50, 50)    // 图标大小
       }];
@@ -186,7 +192,6 @@ export default {
     },
     async getmark({province, city, prefecture, areaName, placeName, placeId}) {
       if (this.map) {
-        console.log(2222)
         this.map.remove(this.mass)
       }
 

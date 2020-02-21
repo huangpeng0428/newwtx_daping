@@ -241,7 +241,7 @@ export default {
         color: #fff;
         position: absolute;
         top: 11rem;
-        right: 29.5rem;
+        right: 30.5rem;
         padding: 1rem;
         .btn-cont{
             height: 4rem;
