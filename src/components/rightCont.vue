@@ -355,6 +355,9 @@ export default {
     async mounted() {
       await this.getAdress()
       this.getAllProvince()
+      Bus.$on('busGetWarningTask', () => {
+        this.getWarningTask()
+      })
 
       // this.getAllCity()
     },

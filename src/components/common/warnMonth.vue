@@ -107,6 +107,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import Bus from '../../bus'
 export default {
     props: {
         taskList: {
@@ -247,8 +248,9 @@ export default {
                 if (res.state == '0') {
                   alert(message)
                   this.isConfirm = false
-                  this.$refs.confirmState[i].innerHTML = '已完成';
+                  this.$refs.confirmState[i].innerHTML = '已确认';
                   this.$emit('getTaskList')
+                  Bus.$emit('busGetWarningTask')
 
                   // document.getElementByClassName('confirmState').innerHTML = '已完成';
                 } else {
