@@ -21,7 +21,8 @@ const state = {
   const mutations = {
     setadressInfo(state, adressInfo) {
       state.adressInfo = adressInfo;
-      console.log('state.adressInfo', state.adressInfo)
+
+      // console.log('state.adressInfo', state.adressInfo)
     },
     setrightInfoBottom(state, rightInfoBottom) {
       state.rightInfoBottom = rightInfoBottom;

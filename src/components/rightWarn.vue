@@ -60,13 +60,22 @@
           </div>
         </div> -->
       </div>
-      <div class="flex vertical">
+      <div
+        v-if="dataConfig.fState == '1'"
+        class="flex vertical">
         <div
           class="warn-btn pointer"
           @click="showconfirmBtn('2')">确认为预警</div>
         <div
           class="warn-btn right pointer"
           @click="showconfirmBtn('1')">确认为火情</div>
+      </div>
+      <div
+        v-else
+        class="flex vertical horizontal">
+        <div
+          class="warn-btn pointer"
+          @click="showconfirmBtn('4')">确认收到拆卸告警</div>
       </div>
       <div class="item-right-warn flex f-between">
         <div class>负责人</div>
@@ -121,8 +130,12 @@ export default {
       },
       showconfirmBtn(str) {
           this.type = str
-          this.desc = str == '1' ? '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。' : '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。'
-          this.isconfirmBtn = true
+          if (str == '4') {
+              this.confirmBtn()
+          } else {
+              this.desc = str == '1' ? '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。' : '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。'
+              this.isconfirmBtn = true
+          }
 
         //   this.$emit('confirmBtn', str)
       },

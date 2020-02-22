@@ -40,8 +40,8 @@
             class="pointer"
             src="../assets/image/home.png"
             @click="showInfo('isShowList', false)" >
-          <img src="../assets/image/checkall.png" >
-          <img src="../assets/image/close.png" >
+            <!-- <img src="../assets/image/checkall.png" >
+          <img src="../assets/image/close.png" > -->
         </div>
       </div>
       <div class="tex-left flex vertical f-between">
@@ -49,7 +49,9 @@
           <span class="fs-87">设备数量总和</span>
           <span class="c-06f pdd-lr-10 fs-175">{{ allAount }}</span>
         </div>
-        <div class="left-adress tex-overflow ">{{ params.province }}</div>
+        <div
+          v-if="params.province"
+          class="left-adress tex-overflow ">{{ params.province }}</div>
       </div>
       <div v-if="!isShowList">
         <div class="list">
@@ -432,6 +434,11 @@ export default {
               } catch (error) {
               }
             }
+          } else {
+            delete this.params.placeId;
+            console.log(this.params)
+            this.getcountFacility()
+            this.getFacilityState()
           }
         } else {
             try {

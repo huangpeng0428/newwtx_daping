@@ -15,7 +15,9 @@
           {{ websocketData.facilitySecondPosition }}
           <span class="warnColor">{{ infoTop.infoArr[1].val }}</span>
           发生
-          <span class="warnColor">警告！</span>
+          <span
+            class="warnColor"
+            v-text="websocketData.fState == '1' ? '警告!' : '拆卸告警'"/>
         </div>
       </div>
       <div
@@ -124,7 +126,7 @@ export default {
       communicationNum: 0,
       allAountMonth: 0,
       websocket: null,
-      infoTop: {title: '告警信息', haveInfo: true, showNext: true, warnAdress: '', homeManager: '', homeManagerPhone: '', infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}]},
+      infoTop: {title: '告警信息', haveInfo: true, showNext: true, fState: '11', warnAdress: '', homeManager: '', homeManagerPhone: '', infoArr: [{title: '告警时间', key: 'alarmTime', val: '无', showColor: false, showHead: true, showtitle: true}, {title: '告警设备类型：', key: 'facilityType', val: '无', showColor: true, showHead: false, showtitle: true}, {title: '所在场所：', key: 'placeName', val: '无', showColor: true, showHead: false, showtitle: true}]},
       imgArr: [''],
       audioSrc: require('../assets/audio/True_and_false.mp3'),
       websocketData: {},
@@ -286,6 +288,7 @@ export default {
         this.infoTop.warnAdress = websocketData.areaName
         this.infoTop.homeManager = websocketData.homeManager
         this.infoTop.homeManagerPhone = websocketData.homeManagerPhone
+        this.infoTop.fState = websocketData.fState
         Object.keys(websocketData).forEach(e => {
           this.infoTop.infoArr.forEach(element => {
             if (element.key == e) {
@@ -327,7 +330,15 @@ export default {
       }
     },
     async confirmBtn(str) {
-      let message = str == '1' ? '火情已确认' : '预警已确认'
+      let message
+      let postUrl
+      if (str == '4') {
+        message = '拆卸已恢复'
+        postUrl = '/realTimeAlarm/confirmAlarmOverChaiXie.do'
+      } else {
+        message = str == '1' ? '火情已确认' : '预警已确认'
+        postUrl = '/realTimeAlarm/confirmAlarm.do'
+      }
 
       let params = {
         facilityID: this.websocketData.facilityId,
@@ -352,7 +363,7 @@ export default {
         // }
 
         try {
-          let res = await this.$http.post('/realTimeAlarm/confirmAlarm.do', params)
+          let res = await this.$http.post(postUrl, params)
           console.log(res)
           if (res.state == '0') {
             this.$message({

@@ -242,7 +242,7 @@ export default {
                     element.val = '确认为火警'
                   }
                   if (val[e] == '2') {
-                    element.val = '确认为预情'
+                    element.val = '确认为预警'
                   }
                 } else {
                   element.val = val[e]
@@ -312,6 +312,7 @@ export default {
             this.userAddress.areaName = ''
             this.userAddress.placeName = ''
             newval.prefecture = ''
+            newval.areaName = ''
             this.areaList = []
             this.placeList = []
             this.getAllPrefecture()
@@ -327,6 +328,7 @@ export default {
             console.log(newval.prefecture, 222)
             this.getAllArea()
           }
+          console.log(newval.areaName)
           if (newval.areaName != '' && newval.areaName != oldval.areaName) {
             console.log(4)
             this.userAddress.placeName = ''

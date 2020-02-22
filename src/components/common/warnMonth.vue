@@ -87,7 +87,7 @@
               v-text="item.fConfirmState == '0' ? '(未完成)': item.fOperationTime"/>
           </div>
           <div
-            v-if="confirmIndex == index && isConfirm"
+            v-if="confirmIndex == index && isConfirm && flag == '未确认'"
             class="btn-list">
             <div
               class="confirm-btn btn-style pointer"
@@ -97,6 +97,18 @@
               @click="confirmBtn('fire', item, index)">确认为火警</div>
             <div
               class="cancel-btn btn-style pointer"
+              @click="confirmBtn('cancel', item, index)">取消</div>
+          </div>
+          <div
+            v-if="confirmIndex == index && isConfirm && flag == '未恢复'"
+            class="btn-list">
+            <div
+              class="confirm-btn btn-style pointer"
+              style="width: 8rem; margin-top: 2.5rem;"
+              @click="confirmBtn('confirme', item, index)">确认拆卸告警</div>
+            <div
+              class="cancel-btn btn-style pointer"
+              style="width: 8rem;"
               @click="confirmBtn('cancel', item, index)">取消</div>
           </div>
         </div>
@@ -206,7 +218,7 @@ export default {
             this.$emit('hiddenWarn')
         },
         clickResult(str, i) {
-          console.log(i)
+            this.flag = str
             if (str == '未确认') {
                 this.confirmIndex = i
                 this.isConfirm = true
@@ -217,11 +229,44 @@ export default {
               this.isConfirm = false
               return
             }
-            let message = str == 'confirme' ? '预警已确认' : '火情已确认'
-            let confirmStr = str == 'confirme' ? '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。' : '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。'
-            let state = str == 'confirme' ? '2' : '1'
-            if (confirm(confirmStr) == true) {
-            let params = {
+
+            // let message
+            // let postUrl
+
+            // let confirmStr
+            // let state
+            // let params = {
+            //     facilityID: obj.facilityId,
+            //     type: obj.facilityType,
+            //     logID: obj.logId,
+            //     userId: this.loginCookie,
+            //     state: state,
+            //     tableType: obj.tableType,
+            //     timestamp: new Date().getTime(),
+            //     fTime: obj.alarmTime
+            // }
+
+            // if (obj.reason == 5) {
+            //   postUrl = '/realTimeAlarm/confirmAlarmOverChaiXie.do'
+            //   state = '4'
+            //   message = '拆卸已恢复'
+            //   params = {
+            //     facilityID: obj.facilityId,
+            //     type: obj.facilityType,
+            //     logID: obj.logId,
+            //     userId: this.loginCookie,
+            //     state: state,
+            //     tableType: obj.tableType,
+            //     timestamp: new Date().getTime(),
+            //     fTime: obj.alarmTime
+            // }
+            //   this.postConfirm(postUrl, params, message, i, '已恢复')
+            // } else {
+              let message = str == 'confirme' ? '预警已确认' : '火情已确认'
+              let postUrl = '/realTimeAlarm/confirmAlarm.do'
+              let confirmStr = str == 'confirme' ? '设备预警是指由于环境或人为等因素干扰而产生的正常设备告警，确认设备预警后，相应的“告警异常”状态会自动解除，从而恢复正常的安全状态。' : '真实火情是指已经产生明火燃烧发生了真实火灾，请务必谨慎确认。'
+              let state = str == 'confirme' ? '2' : '1'
+              let params = {
                 facilityID: obj.facilityId,
                 type: obj.facilityType,
                 logID: obj.logId,
@@ -230,7 +275,23 @@ export default {
                 tableType: obj.tableType,
                 timestamp: new Date().getTime(),
                 fTime: obj.alarmTime
-            }
+              }
+              this.$confirm(confirmStr, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                this.postConfirm(postUrl, params, message, i, '已确认')
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消操作'
+                });
+              });
+
+            // }
+
+            // if (confirm(confirmStr) == true) {
 
                 // let params = {
                 //   facilityID: '321',
@@ -243,21 +304,32 @@ export default {
                 //   fTime: '2020-02-13 02:13:32'
                 // }
 
-                try {
-                let res = await this.$http.post('/realTimeAlarm/confirmAlarm.do', params)
-                if (res.state == '0') {
-                  alert(message)
-                  this.isConfirm = false
-                  this.$refs.confirmState[i].innerHTML = '已确认';
-                  this.$emit('getTaskList')
-                  Bus.$emit('busGetWarningTask')
+                // this.postConfirm(postUrl, params, message, i)
 
-                  // document.getElementByClassName('confirmState').innerHTML = '已完成';
-                } else {
-                  alert('未知错误，请稍后再试')
-                }
-                } catch (error) {
-                }
+            // }
+        },
+        async postConfirm(postUrl, params, message, i, str) {
+          try {
+            let res = await this.$http.post(postUrl, params)
+            if (res.state == '0') {
+              this.$message({
+                message: message,
+                type: 'success'
+              });
+              this.isConfirm = false
+
+              this.$refs.confirmState[i].innerHTML = str;
+              this.$emit('getTaskList')
+              Bus.$emit('busGetWarningTask')
+
+              // document.getElementByClassName('confirmState').innerHTML = '已完成';
+            } else {
+              this.$message({
+                message: res.message,
+                type: 'error'
+              });
+            }
+          } catch (error) {
             }
         }
     }
@@ -274,7 +346,7 @@ export default {
     background-repeat: no-repeat;
     background-size: 100% 100%;
     position: relative;
-    z-index:99999;
+    z-index:999;
     .warnMonth-cont-title{
         padding: 1.3rem 0;
     }
