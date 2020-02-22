@@ -207,6 +207,27 @@ export default {
           this.infoTop.homeManageInfo = this.homeManageInfo
           Object.keys(val).forEach(e => {
             this.infoTop.infoArr.forEach(element => {
+              if (element.key == 'fConfirmState') {
+                if (val.reason == '1' || !val.reason) {
+                  if (val['facilityType'] == '0') {
+                      element.val = '未确认'
+                  }
+                  if (val['facilityType'] == '1') {
+                    element.val = '确认为火情'
+                  }
+                  if (val['facilityType'] == '2') {
+                    element.val = '确认为预警'
+                  }
+                }
+                if (val.reason == '10') {
+                  if (val['fFireOverState'] == '0') {
+                      element.val = '未恢复'
+                  }
+                  if (val['fFireOverState'] == '1') {
+                      element.val = '已恢复'
+                  }
+                }
+              }
               if (element.key == e) {
                 if (element.key == 'placeAddress') {
                   element.val = `${val[e]}${val['facilitySecondPosition']}`
@@ -235,39 +256,40 @@ export default {
                       break;
                   }
                 } else if (element.key == 'fConfirmState') {
-                  if (val[e] == '0') {
-                    element.val = '未确认'
-                  }
-                  if (val[e] == '1') {
-                    element.val = '确认为火警'
-                  }
-                  if (val[e] == '2') {
-                    element.val = '确认为预警'
-                  }
+
+                  // if (val[e] == '0') {
+                  //   element.val = '未确认'
+                  // }
+                  // if (val[e] == '1') {
+                  //   element.val = '确认为火警'
+                  // }
+                  // if (val[e] == '2') {
+                  //   element.val = '确认为预警'
+                  // }
                 } else {
                   element.val = val[e]
 
                   // if (element.key == 'fConfirmState') {
-              //   if (e.reason == '1' || !e.reason) {
-              //     if (val['facilityType'] == '0') {
-              //         element.val = '未确认'
-              //     }
-              //     if (val['facilityType'] == '1') {
-              //       element.val = '确认为火情'
-              //     }
-              //     if (val['facilityType'] == '2') {
-              //       element.val = '确认为预警'
-              //     }
-              //   }
-              //   if (e.reason == '10') {
-              //     if (val['fFireOverState'] == '0') {
-              //         element.val = '未恢复'
-              //     }
-              //     if (val['fFireOverState'] == '1') {
-              //         element.val = '已恢复'
-              //     }
-              //   }
-              // }
+                  //   if (e.reason == '1' || !e.reason) {
+                  //     if (val['facilityType'] == '0') {
+                  //         element.val = '未确认'
+                  //     }
+                  //     if (val['facilityType'] == '1') {
+                  //       element.val = '确认为火情'
+                  //     }
+                  //     if (val['facilityType'] == '2') {
+                  //       element.val = '确认为预警'
+                  //     }
+                  //   }
+                  //   if (e.reason == '10') {
+                  //     if (val['fFireOverState'] == '0') {
+                  //         element.val = '未恢复'
+                  //     }
+                  //     if (val['fFireOverState'] == '1') {
+                  //         element.val = '已恢复'
+                  //     }
+                  //   }
+                  // }
                 }
               }
             });
