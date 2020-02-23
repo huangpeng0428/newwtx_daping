@@ -209,13 +209,13 @@ export default {
             this.infoTop.infoArr.forEach(element => {
               if (element.key == 'fConfirmState') {
                 if (val.reason == '1' || !val.reason) {
-                  if (val['facilityType'] == '0') {
+                  if (val['fConfirmState'] == '0') {
                       element.val = '未确认'
                   }
-                  if (val['facilityType'] == '1') {
+                  if (val['fConfirmState'] == '1') {
                     element.val = '确认为火情'
                   }
-                  if (val['facilityType'] == '2') {
+                  if (val['fConfirmState'] == '2') {
                     element.val = '确认为预警'
                   }
                 }
