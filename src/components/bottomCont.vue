@@ -246,7 +246,7 @@ export default {
         },
         async getChartData(posturl, i) {
 
-          // this.dateArr = []
+          this.dateArr = []
           this.onlineArr = []
           this.offlineArr = []
           this.lowArr = []
@@ -258,6 +258,9 @@ export default {
             if (i == '0') {
 
               let beforeday = [util.getBeforeDate(1), util.getBeforeDate(2), util.getBeforeDate(3), util.getBeforeDate(4), util.getBeforeDate(5), util.getBeforeDate(6), util.getBeforeDate(7)]
+              beforeday.forEach(e => {
+                this.dateArr.push(e.substr(5))
+              })
               this.onlineArr = [0, 0, 0, 0, 0, 0, 0]
               this.offlineArr = [0, 0, 0, 0, 0, 0, 0]
               this.lowArr = [0, 0, 0, 0, 0, 0, 0]
