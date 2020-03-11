@@ -3,12 +3,10 @@ export default {
     // 对象有序化
     objKeySort(obj) {
         let newkey = Object.keys(obj).sort();
-
-        let newObj = {};
-        for (let i = 0; i < newkey.length; i++) {
-            newObj[newkey[i]] = obj[newkey[i]];
-        }
-        return newObj;
+        return newkey.reduce((c, e) => {
+            c[e] = obj[e]
+            return c
+        }, {})
     },
 
     // 将对象属性与值拼接成串
