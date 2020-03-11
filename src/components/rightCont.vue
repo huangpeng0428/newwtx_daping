@@ -642,6 +642,7 @@ export default {
                   right: .2rem;
                   overflow-y: scroll;
                   overflow-x: hidden;
+                  z-index: 111;
                }
                .likeSearchItem{
                  padding: 0 1rem;

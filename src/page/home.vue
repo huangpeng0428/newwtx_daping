@@ -27,7 +27,10 @@
           class="pointer"
         >
           <p>火险等级</p>
-          <p class="level">{{ level }}</p>
+          <p
+            class="level"
+            @click="playAudio('play')"
+          >{{ level }}</p>
         </div>
         <div
           class="pointer"
@@ -140,7 +143,8 @@ export default {
         leval: 6
       },
       weatherObj: {},
-      level: '一级'
+      level: '一级',
+      flag: true
     }
   },
   computed: {
@@ -208,13 +212,15 @@ export default {
       this.isshowWarn = flag
     },
     playAudio(action) {
-      let buttonAudio = document.getElementById('eventAudio');
-      buttonAudio.setAttribute('src', this.audioSrc)
-      if (action == 'play') {
-        buttonAudio.play()
-      } else {
-        buttonAudio.pause()
-      }
+      this.$nextTick(() => {
+        let buttonAudio = document.getElementById('eventAudio');
+        buttonAudio.setAttribute('src', this.audioSrc)
+        if (action == 'play') {
+          buttonAudio.play()
+        } else {
+          buttonAudio.pause()
+        }
+      })
 
     },
     async getFacilityCommunication() {
@@ -274,7 +280,9 @@ export default {
 
         // let websocketData = this.websocketData.list[0]
         // websocket接收信息
-        if (JSON.parse(event.data).operation != '1') return
+        if (JSON.parse(event.data).operation == '1') {
+
+        // }
         this.isWebsocket = true
         this.playAudio('play')
         let websocketData = JSON.parse(event.data).list[0]
@@ -327,6 +335,23 @@ export default {
             }
           })
         })
+      } else if (JSON.parse(event.data).operation == '2') {
+
+          // if (this.flag) {
+          //   this.flag = false
+          //   this.$message({
+          //     message: '当前设备已处理',
+          //     type: 'success'
+          //   });
+          // }
+          // setTimeout(() => {
+          //   this.flag = true
+          // }, 1000);
+
+          this.isWebsocket = false
+          this.playAudio('pause')
+          Bus.$emit('busGetWarningTask')
+      }
       }
     },
     async confirmBtn(str) {
