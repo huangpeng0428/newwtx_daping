@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="login-title tex-center">##############</p>
+    <p class="login-title tex-center">YOU-LINK万物智联可视化平台</p>
     <div class="login-input-cont">
       <div
         v-for="(item, index) in inputList"
