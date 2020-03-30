@@ -167,7 +167,7 @@ export default {
         offset: new AMap.Pixel(0, -30),
         isCustom: true,
         autoMove: true,
-        content: "<div style='text-align: left;width:20rem;height:9rem;background:rgba(33,82,162,0.7);border-radius:1rem;border:solid 1px #cb1bbc;padding:0.12rem 0.1rem;'><p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>场所名称：" + fAreaName + '</p>' +
+        content: "<div style='text-align: left;max-width:20rem;max-height:9rem;background:rgba(33,82,162,0.7);border-radius:1rem;border:solid 1px #cb1bbc;padding:1.2rem 1rem;'><p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>场所名称：" + fAreaName + '</p>' +
            "<p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>法人：" + fVillagePrincipal + '</p>' +
            "<p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>紧急联系人：" + fAreaPrincipal + '</p>' +
            "<p style='margin-top:0.04rem;font-size:0.14rem;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowarp;'>电话：" + fAreaPhone + '</p>' +

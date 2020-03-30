@@ -17,7 +17,7 @@
           发生
           <span
             class="warnColor"
-            v-text="websocketData.fState == '1' ? '警告!' : '拆卸告警'"/>
+            v-text="websocketData.fState == '1' ? '异常状态!' : '拆卸告警'"/>
         </div>
       </div>
       <div
@@ -26,7 +26,7 @@
         <div
           class="pointer"
         >
-          <p>火险等级</p>
+          <p>气象火险等级</p>
           <p
             class="level"
             @click="playAudio('play')"
@@ -35,14 +35,14 @@
         <div
           class="pointer"
         >
-          <p>设备通讯统计</p>
+          <p>设备通讯频次</p>
           <p><span class="number">{{ communicationNum }}</span>次</p>
         </div>
         <div
           class="pointer"
           @mouseenter="mouseEvent(true)"
           @mouseleave="mouseEvent(false)">
-          <p>历史告警(前30天)</p>
+          <p>30日报警记录</p>
           <p><span class="number">{{ allAountMonth }}</span>次</p>
         </div>
         <div
@@ -124,7 +124,7 @@ export default {
   },
   data() {
     return {
-      title: '智慧消防可视化监控中心',
+      title: 'YOU-LINK万物智联可视化中心',
       params: null,
       communicationNum: 0,
       allAountMonth: 0,
@@ -426,7 +426,7 @@ export default {
       width: 28.75rem;
       color:rgba(213,253,253,1);
       text-shadow:0px 0px 7px rgba(33,255,255,0.56);
-      font-size: 2.5rem;
+      font-size: 2rem;
     }
     .warnCont{
       background: #0B1836;

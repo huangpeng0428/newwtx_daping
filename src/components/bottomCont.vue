@@ -95,7 +95,7 @@ export default {
     },
     data() {
         return {
-            echartsData: ['7日数量', '7日状态', '地区分布', '智能烟感', '智慧用电', '视频监控', '智慧消防', '智能气感', '液位液压'],
+            echartsData: ['一周数量', '一周状态', '区域分布', '智能烟感', '智慧用电', '视频监控', '智能消栓', '智能气感', '液位液压'],
             exporturl: '',
             showEchart: false,
             showList: false,

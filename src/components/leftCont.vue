@@ -46,7 +46,7 @@
       </div>
       <div class="tex-left flex vertical f-between">
         <div class="flex vertical">
-          <span class="fs-87">设备数量总和</span>
+          <span class="fs-87">总设备数</span>
           <span class="c-06f pdd-lr-10 fs-175">{{ allAount }}</span>
         </div>
         <div
@@ -124,7 +124,7 @@
         </div>
       </div>
       <div class="tex-left">
-        <span class="fs-87">设备次数统计(前30天)</span>
+        <span class="fs-87">设备报警次数统计(前30天)</span>
         <div class="left-echarts">
           <div class="statiStical">
             <line-chart
@@ -134,7 +134,7 @@
           <img src="../assets/image/zuobiao.png">
         </div>
       </div>
-      <div class="tex-left fs-87 mrg-tb-15">设备状态统计</div>
+      <div class="tex-left fs-87 mrg-tb-15">设备运行状况统计</div>
       <item-data
         v-if="stateData.length"
         :state-data="stateData"/>
@@ -289,7 +289,7 @@ export default {
         stateData: [
           {title: '在线', type: 'online', count: '', accountNum: '', color: '#8252FD'},
           {title: '离线', type: 'offline', count: '', accountNum: '', color: '#E5901D'},
-          {title: '低电压', type: 'low', count: '', accountNum: '', color: '#408EFE'},
+          {title: '低电', type: 'low', count: '', accountNum: '', color: '#408EFE'},
           {title: '故障', type: 'fault', count: '', accountNum: '', color: '#05DBB0'},
           {title: '告警', type: 'warn', count: '', accountNum: '', color: '#BE4596'}
         ],

@@ -6,7 +6,7 @@
           <img
             style="width:2rem;"
             src="../../assets/image/warnmonth.png" >
-          <p style="margin-left:.3rem;">历史告警记录</p>
+          <p style="margin-left:.3rem;">30日报警记录</p>
         </div>
         <img
           class="warn-close pointer"
@@ -19,14 +19,14 @@
           :key="index"
           class="warnMonth-item">
           <div class="padb flex f-between">
-            <p>告警时间：{{ item.alarmTime }}</p>
+            <p>报警时间：{{ item.alarmTime }}</p>
             <div
               ref="confirmState"
               class="warnMonth-item-btn pointer"
               @click="clickResult(item.Result, index)">{{ item.Result }}</div>
           </div>
           <div class="padb flex vertical">
-            <p>告警设备：</p>
+            <p>设备类型：</p>
             <div class="warnMonth-item-rqtype flex vertical horizontal">
               <img
                 :src="item.imgUrl"
@@ -35,13 +35,13 @@
             </div>
           </div>
           <div class="padb flex">
-            <p>告警地址：</p>
+            <p>设备地址：</p>
             <div
               style="width:20.5rem;text-align: left;"
               class="tex-overflow">{{ item.placeAddress }}{{ item.placeName }}{{ item.facilitySecondPosition }}</div>
           </div>
           <div class="padb flex">
-            <p>告警原因：</p>
+            <p>报警原因：</p>
             <div
               v-if="item.reason"
               style="width:20.5rem;text-align: left;"
@@ -54,26 +54,26 @@
             >无</div>
           </div>
           <div class="padb flex">
-            <p>联系人：</p>
+            <p>负责人：</p>
             <div
               style="width:20.5rem;text-align: left;"
               class="tex-overflow">{{ item.placePrincipal }}</div>
           </div>
           <div class="padb flex">
-            <p>联系人电话：</p>
+            <p>负责人电话：</p>
             <div
               style="width:20.5rem;text-align: left;"
               class="tex-overflow">{{ item.placePrincipalPhone }}</div>
           </div>
           <div class="padb flex">
-            <p>处理人：</p>
+            <p>操作人：</p>
             <div
               style="width:20.5rem;text-align: left;"
               class="tex-overflow"
               v-text="item.fConfirmState == '0'? '(未处理)': item.fOperatorUserName"/>
           </div>
           <div class="padb flex">
-            <p >处理电话：</p>
+            <p >操作人电话：</p>
             <div
               style="width:20.5rem;text-align: left;"
               class="tex-overflow"
