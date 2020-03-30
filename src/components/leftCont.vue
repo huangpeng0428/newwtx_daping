@@ -291,7 +291,7 @@ export default {
           {title: '离线', type: 'offline', count: '', accountNum: '', color: '#E5901D'},
           {title: '低电', type: 'low', count: '', accountNum: '', color: '#408EFE'},
           {title: '故障', type: 'fault', count: '', accountNum: '', color: '#05DBB0'},
-          {title: '告警', type: 'warn', count: '', accountNum: '', color: '#BE4596'}
+          {title: '报警', type: 'warn', count: '', accountNum: '', color: '#BE4596'}
         ],
         facilityList: [
           {title: '智能烟感', count: '', unit: '个', icon: require('../assets/image/yangan.png'), ftype: 0},
