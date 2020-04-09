@@ -257,7 +257,7 @@ export default {
 
       // this.websocket = new WebSocket('ws://121.36.247.51:8282/IntelligentFire/websocket'); // 正式
       // this.websocket = new WebSocket('ws://120.26.215.34:8080/IntelligentFire/websocket'); // 正式
-      this.websocket = new WebSocket('ws://121.36.15.94:8282/IntelligentFire/websocket');
+      this.websocket = new WebSocket('wss://youlink.you-gogo.com:8282/IntelligentFire/websocket');
 
       } else {
         alert('当前浏览器 Not support websocket');
