@@ -113,7 +113,7 @@
               class="pdd-r-5"
               v-text="item.isOnline?'在线':'离线'"/>
             <span
-              v-if="item.isOnline"
+              v-if="item.state == 1"
               class="pdd-r-5 warn">告警</span>
             <div class="tex-overflow adress-text">{{ item.placeAddress }}{{ item.facilitySecondPosition }}</div>
           </div>
@@ -234,11 +234,11 @@
                 class="AVURL"
                 type="">
             </video>
-            <img
+            <!-- <img
               style="position: absolute;
               right: -.5rem;
               top: -.5rem;"
-              src="../assets/image/close.png" >
+              src="../assets/image/close.png" > -->
           </div>
         </info-data>
       </div>
@@ -427,7 +427,6 @@ export default {
               if (data.ftype == 0) params['sum'] = sum
               params['type'] = data.ftype
               this.type = data.ftype
-              console.log(this.type)
               try {
                 let res = await this.$http.post('/facilityInfo/queryFacilityListByType.do', params)
                 this.listByType = res
@@ -436,7 +435,7 @@ export default {
             }
           } else {
             delete this.params.placeId;
-            console.log(this.params)
+            this.hiddenInfo()
             this.getcountFacility()
             this.getFacilityState()
           }
@@ -460,7 +459,6 @@ export default {
               }
               this.adress = res[0].fLiveAddress
               this.adress1 = res[0].fRtmp
-              console.log(this.adress, this.adress1)
             } catch (error) {
             }
         }
@@ -469,7 +467,7 @@ export default {
         // this.showMask = false
       },
       hiddenInfo() {
-
+        this.showVideo = false
         this.isShowInfo = false
       },
       playVideo() {

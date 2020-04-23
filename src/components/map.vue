@@ -121,7 +121,6 @@ export default {
       // this.addMarkers()
     },
     addMarkers() {
-      console.log(1111)
 
       // console.log(this.styleObject)
       this.mass = new AMap.MassMarks(this.data_info, {

@@ -4,7 +4,7 @@
     <div
       ref="weekChart"
       class="week-chart"/>
-    <div class="weekimg">7日设备数量统计</div>
+    <div class="weekimg">7日设备{{ title }}统计</div>
     <img
       class="week-export pointer"
       src="../../assets/image/echarts1111.png"
@@ -19,6 +19,12 @@
 export default {
     name: 'WeekChart',
     props: {
+       title: {
+           type: String,
+           default() {
+               return ''
+           }
+       },
        dateArr: {
            type: Array,
            default() {

@@ -11,7 +11,8 @@
           :type="item.type"
           v-model="item.value"
           :maxlength="item.maxlength"
-          class="account">
+          class="account"
+          @keydown="KeyDown()">
         <img
           :src="item.src"
           class="login-img">
@@ -50,6 +51,9 @@ export default {
     methods: {
         getCodeSrc() {
           this.codeSrc = `${config.HTTPURL}/user/getPatternCode.do?time=${new Date().getTime()}`
+        },
+        KeyDown() {
+          if (event.keyCode == 13) this.loginFunc()
         },
         async loginFunc() {
           let param = this.inputList.reduce((c, item) => {

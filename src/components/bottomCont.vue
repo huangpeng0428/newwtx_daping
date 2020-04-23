@@ -30,6 +30,7 @@
           :fault-arr="faultArr"
           :warn-arr="warnArr"
           :title-arr="titleArr"
+          :title="title"
           @closeEcharts="closeEcharts"
           @exportData="exportData"/>
       </div>
@@ -116,6 +117,7 @@ export default {
               {title: '故障', type: 'fault', count: '', accountNum: '', color: '#05DBB0'},
               {title: '告警', type: 'warn', count: '', accountNum: '', color: '#BE4596'}
             ],
+            title: '状态',
             itemStyle: {width: '6rem', height: '0.88rem'},
             type: 0,
             showCount: false
@@ -135,7 +137,6 @@ export default {
     },
     mounted() {
 
-      // console.log(111)
     },
     methods: {
         bottomClick(str) {
@@ -255,6 +256,7 @@ export default {
           try {
             let res = await this.$http.post(posturl, this.params)
             this.titleArr = i == '0' ? ['烟', '电', '气', '视频', '水'] : ['在线', '离线', '低电压', '故障', '告警']
+            this.title = i == '0' ? '数量' : '状态'
             if (i == '0') {
 
               let beforeday = [util.getBeforeDate(1), util.getBeforeDate(2), util.getBeforeDate(3), util.getBeforeDate(4), util.getBeforeDate(5), util.getBeforeDate(6), util.getBeforeDate(7)]

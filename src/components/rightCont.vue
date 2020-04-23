@@ -313,7 +313,6 @@ export default {
       'newNserAddress': {
         handler(newval, oldval) {
           if (newval.province != '' && newval.province != oldval.province) {
-            console.log(1)
             this.userAddress.city = ''
             this.userAddress.prefecture = ''
             this.userAddress.areaName = ''
@@ -329,7 +328,6 @@ export default {
             this.getAllCity()
           }
           if (newval.city != '' && newval.city != oldval.city) {
-            console.log(2)
             this.userAddress.prefecture = ''
             this.userAddress.areaName = ''
             this.userAddress.placeName = ''
@@ -340,19 +338,15 @@ export default {
             this.getAllPrefecture()
           }
           if (newval.prefecture != '' && newval.prefecture != oldval.prefecture) {
-            console.log(3)
             this.userAddress.areaName = ''
             this.userAddress.placeName = ''
             newval.areaName = ''
             this.placeList = []
 
             // this.userAddress.placeName = ''
-            console.log(newval.prefecture, 222)
             this.getAllArea()
           }
-          console.log(newval.areaName)
           if (newval.areaName != '' && newval.areaName != oldval.areaName) {
-            console.log(4)
             this.userAddress.placeName = ''
 
             // this.userAddress.placeName = ''
@@ -360,7 +354,6 @@ export default {
           }
 
           // if (newval.placeName != '' && newval.placeName != oldval.placeName) {
-          //   console.log(11)
 
           //   // this.userAddress.placeName = ''
           //   this.getAllPlace()
@@ -368,8 +361,6 @@ export default {
 
           setTimeout(() => {
             newval['placeId'] = this.areaId
-
-            // console.log('newval', newval)
 
             this.setadressInfo(newval)
             newval['userId'] = this.loginCookie
@@ -479,7 +470,6 @@ export default {
         }
       },
       async getAllArea() {
-        console.log(this.userAddress.prefecture, 111)
         let params = {
           userID: this.loginCookie,
           prefecture: this.userAddress.prefecture
@@ -551,7 +541,6 @@ export default {
             this.eventObj.DM = ''
             this.eventObj.listpoint.push(fPositionX, fPositionY)
             this.eventObj.leval = 16
-            console.log('111111', this.eventObj)
             Bus.$emit('initialmap', this.eventObj)
             break
         }
@@ -561,7 +550,6 @@ export default {
       },
       clickPlace() {
         this.eventObj.DM = this.placeValue
-        console.log(this.eventObj)
         Bus.$emit('initialmap', this.eventObj)
       },
       async getlikeSearchList() {
